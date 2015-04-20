@@ -1,0 +1,226 @@
+\documentclass[]{article}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{courier}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{matrix,positioning,calc}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage{textcomp}
+\newcommand{\ty}[1]{\texttt{#1}}
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\lstset{
+backgroundcolor=\color{lbcolor},
+    tabsize=4,    
+%   rulecolor=,
+    language=[GNU]C++,
+        basicstyle=\scriptsize,
+        upquote=true,
+        aboveskip={1\baselineskip},
+        columns=fixed,
+        showstringspaces=false,
+        extendedchars=false,
+        breaklines=true,
+        frame=single,
+        numbers=left,
+        showtabs=false,
+        showspaces=false,
+        showstringspaces=false,
+        identifierstyle=\ttfamily,
+        keywordstyle=\color[rgb]{0,0,1},
+        commentstyle=\color[rgb]{0.026,0.112,0.095},
+        stringstyle=\color[rgb]{0.627,0.126,0.941},
+        numberstyle=\color[rgb]{0.205, 0.142, 0.73},
+%        \lstdefinestyle{C++}{language=C++,style=numbers}’.
+}
+\lstset{
+    backgroundcolor=\color{white},
+    tabsize=4,
+  language=C++,
+  tabsize=3,
+  frame=lines,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  breaklines=true,
+  showstringspaces=false,
+  basicstyle=\footnotesize,
+ %identifierstyle=\color{magenta},
+  keywordstyle=\color[rgb]{0,0,1},
+  commentstyle=\color{SeaGreen},
+  stringstyle=\color{red}
+  }
+\begin{document}
+
+\title{COP 290 - Assignment 3\\Battlestar Galactica}
+\author{Akshay Kumar Gupta\\ \ty{2013CS50275} \\[.1in]  Barun Patra\\ \ty{2013CS10773} \and  Haroun Habeeb\\ \ty{2013CS10225} \\[.1in] J. Shikhar Murty\\ \ty{2013EE10462}}
+\date{}
+\maketitle
+\begin{abstract}
+\noindent The game is a real-time racing cum FPS game. It takes place in space. Each player owns a spaceship and the objective is to be the first to reach the end. Players can also shoot at other players and try and destroy their ships. Each spaceship has different stats like accuracy, speed, ammo etc. The game is designed for a maximum of four human and four AI players.
+\end{abstract}
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud2} = [draw, circle,fill=blue!25, node distance=3cm,
+minimum height=6em]
+\begin{center}
+\begin{tikzpicture}
+	\node [cloud2] (Ituc) at (0, -3) {Select Ship};
+	\node [cloud2] (I_0) at (0, -6.35){Open};
+	\node [cloud2] (Anst) at (4, -5.5) {Start / Join};
+	\node [cloud2] (It1uc) at (2.3, -9){Waiting};
+	\node [cloud2] (play) at (-2.3, -9){Play};
+	\node [cloud2] (go) at (-4, -5.5) {Game Over};
+	
+	\path [line] (Ituc) edge [bend left=30,looseness=1] (Anst);
+	\path [line] (Anst) edge [bend left=30,looseness=1] (Ituc);
+	\path [line] (I_0) -- (Ituc);
+	\path [line] (Anst) edge [bend left=30,looseness=1] (It1uc);
+	\path [line] (It1uc) edge [bend left=30,looseness=1] (Anst);
+	\path [line] (It1uc) edge [bend left=30,looseness=1](play);
+	\path [line] (play) edge [bend left=30,looseness=1] (go);
+	\path [line] (go) edge [bend left=30,looseness=1] (Ituc);
+\end{tikzpicture}
+\\[0.3in]Game Loop
+\end{center}
+\section{Overall Design}
+\subsection{Core Classes}
+The main classes that our project will have are the following : 
+\begin{itemize}
+\item \ty{class NetworkManager}
+\item \ty{class Cuboid}
+\item \ty{class SpaceObject}
+\item \ty{class Player}
+\item \ty{class AIPlayer}
+These classes are described in detail below.
+\end{itemize}
+\subsection{Helper Classes}
+These are all the other classes, structs and enums that are needed by the core classes.
+\lstinputlisting[label=samplecode,title=Helper classes]{helpers.h}
+\vfill
+\subsection{Libraries}
+We will be using the following libraries in our project:
+\begin{itemize}
+\item \textbf{Graphics : }openGL, freeGLUT, myGUI/GLUI
+\item \textbf{Physics and Math : }GLM
+\item \textbf{Music : }openAL
+\item \textbf{Network : }Boost::Asio
+\end{itemize}
+\section{Network}
+We will use UDP to handle network connections. It is a completely connected peer-to-peer network.
+\subsection{Start of game}
+One user starts the game and the P2P network. This user specifies how many people will be joining the game. A new user can connect to the network by sending his IP to any existing player in the network. As UDP is being used there is no notion of an actual `connection', all each user needs is the IP address of each other player. The existing player will give the IP of the new user to all other users and the IP of all other users to the new user.
+\subsection{Message Passing}
+\begin{itemize}
+\item A user broadcasts his state to all other users at regular time intervals.
+\item We have a separate thread for listening to incoming messages. 
+\item When a new message is received from another user it is passed on to the rendering thread which renders that user according to his state.
+\item In case another user sends us a message which drops, the new position of the user is simply extrapolated from his old position, velocity, and acceleration.
+\end{itemize}
+\subsection{Handling Drops}
+If we have not received a message from a user for the last T seconds, then we assume that the user has dropped. T is large enough compared to the average time interval between messages for the probability to be very low that the user has not dropped.
+
+\lstinputlisting[label=samplecode,title=Network Manager]{networkManager.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Graphics}
+\subsection{Model Rendering}
+\begin{itemize}
+\item Blender will be used to create models of spaceships, asteroids, debris etc.
+\item We will load the object files for these models using our own code.
+\item We will also have our display function for each model.
+\item However, the bodies actually have bounding boxes. These bounding boxes are what the physics engine will handle.
+\end{itemize}
+\lstinputlisting[label=samplecode,title=Space Object]{spaceObject.h}
+\subsection{User Interface / HUD}
+We will offer a certain degree of customizability of the UI to the user. 
+\begin{itemize}
+\item Select Ship : On this screen, the user sees what ships he can select, we may modify some properties of the ship - such as the droid. he can alter the mouse sensitivity and the keyboard mappings. There'll also be a $Play$ button that takes the user to the Start/Join screen.
+\item Start/Join : This screen allows the user to either
+	\begin{enumerate}
+	\item Start: He can start the game with some options, such as the number of players and the number of AI.
+	\item Join : He can join a game by providing the IP of any member of a network.
+	\end{enumerate}
+\item Waiting : This is the screen shown before the match actually begins. On this screen, the user waits while more people join the match.
+	\item Play : This is what is displayed while the player actually plays the game. The world is rendered with a HUD. The HUD displays properties such as health, ammo.	
+\end{itemize}
+
+\noindent All of these screens will be implemented using openGL / freeGLUT / GLUI / myGUI. %%TODO
+\subsection{Camera Positions}
+According to the ship, various camera positions will be available. For example, the TIE fighter might have only two views - first person and the third person. The X-Wing will have an additional Droid-view. The user can toggle between these views during the game. This can be handled by simply moving the camera of that user.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Music}
+Music will be incorporated in our project using openAL. Every client will have a seperate thread to play the music.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Physics and Collision Detection}
+\subsection{Collision Detection and Handling}
+\begin{itemize}
+\item Players' ships can collide with other ships and floating space debris. Our code needs to be able to detect and handle such collisions. We will use bounding boxes for detection of collisions.
+\item Once a collision has been detected, using the point of contact and vectors along collision, we can resolve the equations and assign the bodies their respective velocities.
+\end{itemize}
+\subsection{Hit Detection}
+\begin{itemize}
+
+\item When a user shoots his weapons, we need to check if the projectile hit any of the players. This again, will be done by using bounding boxes for each ship.
+\item If a hit has happened, both parties involved will get a visual cue.
+\end{itemize}
+\vfill
+\lstinputlisting[label=samplecode,title=Physics]{cuboid.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Players \& AI}
+%%TODO
+\subsection{Player}
+Each player has a unique Player No. The different properties of the player are : 
+\begin{itemize}
+\item Player settings : This includes the player's keyboard and mouse preferences, colour choices etc.
+\item Player spaceship : The spaceship that the player chooses.
+\item Player state : This is a tuple of (\emph{Player No.}, \emph{Spaceship details}). This state is sent across to all players at regular intervals. Spaceship details include its current position, velocity, acceleration, angular velocity, angular acceleration and health.
+\end{itemize}
+\lstinputlisting[label=samplecode,title=Player]{Player.h}
+\subsection{AI}
+The AI is another player in the race. It is modelled as a utlity based agent handling partial observability.
+\begin{itemize}
+\item Each user will host at most 1 AI. 
+\item The game state space can be formulated as a \emph{Markov Decision Process}. 
+\item The AI will use reinforcement learning to choose the best action at every point of time. 
+\item The reward function is fairly simple - a high reward for winning, a good reward for scoring a hit, a neutral reward for existence and a punishment for dying.
+\item The difficulty level is essentially how long the AI Player has learnt. There will be three difficulty levels - \emph{easy}, \emph{medium} and \emph{hard}.
+\end{itemize} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Testing}
+\subsection{Network}
+\begin{itemize}
+\item We will test that message passing on the UDP network works correctly.
+\item We will test whether the computers correctly identify that a certain player has dropped.
+\end{itemize}
+\subsection{Graphics}
+\begin{itemize}
+\item We will visually check that models are loaded into openGL and rendered correctly.
+\item We will check that all mouse and keyboard controls work correctly.
+\item We will test that different camera views from the spaceship are accurate.
+\end{itemize}
+\subsection{Physics}
+\begin{itemize}
+\item We will carry out extensive unit testing to check that collision detection and handling works correctly.
+\item We will carry out unit testing to check that calculation of new position and velocity based on a player state is correct.
+\end{itemize}
+\subsection{AI}
+\begin{itemize}
+\item We will play against our AI to test how good it is.
+\item We will check whether the three levels correctly reflect how the AI's actually play.
+\end{itemize}
+\section{Possible Improvements}
+\begin{itemize}
+\item \textbf{Multiple maps : } We want to incorporate multiple maps into our game like a Death Star map etc.
+\item \textbf{Improved physics : } Currently we use bounding cuboids to approximate a space object. We want to use better approximations of objects to make the physics even more realistic.
+\item \textbf{Bullets and missiles : } Currently we have different lasers as weapons. We want to incorporate bullets and missiles with accurate hit physics.
+\item \textbf{Improved visual effects : } We want to improve on the visual effects to make the user experience even better.
+\end{itemize}
+\end{document}
