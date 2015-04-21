@@ -287,6 +287,7 @@ void ObjLoader::render(){
             glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
             mat = faces[i]->mat;
             if(mat->texture!=NULL){
+                cout << "binding texture hi\n";
                 glEnable(GL_TEXTURE_2D);
                 sf::Texture::bind(faces[i]->mat->texture);
             }
@@ -296,7 +297,7 @@ void ObjLoader::render(){
            
         }
         if(faces[i]->four){
-           
+            
             glBegin(GL_QUADS);
                 if(isnormals){
                     glNormal3f(normals[faces[i]->normals[0]]->x,normals[faces[i]->normals[1]]->y,normals[faces[i]->normals[2]]->z);
@@ -312,12 +313,12 @@ void ObjLoader::render(){
                 glVertex3f(vertices[faces[i]->vertices[1]]->x,vertices[faces[i]->vertices[1]]->y,vertices[faces[i]->vertices[1]]->z);
            
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL) {
-                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[2]-1]->u,textureCoordinates[faces[i]->texcoord[2]-1]->v);
+                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[2]]->u,textureCoordinates[faces[i]->texcoord[2]]->v);
                 }
                 glVertex3f(vertices[faces[i]->vertices[2]]->x,vertices[faces[i]->vertices[2]]->y,vertices[faces[i]->vertices[2]]->z);
            
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL) {
-                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[3]-1]->u,textureCoordinates[faces[i]->texcoord[3]-1]->v);
+                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[3]]->u,textureCoordinates[faces[i]->texcoord[3]]->v);
                 }
                 glVertex3f(vertices[faces[i]->vertices[3]]->x,vertices[faces[i]->vertices[3]]->y,vertices[faces[i]->vertices[3]]->z);
                 
@@ -339,7 +340,7 @@ void ObjLoader::render(){
                 glVertex3f(vertices[faces[i]->vertices[1]]->x,vertices[faces[i]->vertices[1]]->y,vertices[faces[i]->vertices[1]]->z);
            
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL) {
-                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[2]-1]->u,textureCoordinates[faces[i]->texcoord[2]-1]->v);
+                    glTexCoord2f(textureCoordinates[faces[i]->texcoord[2]]->u,textureCoordinates[faces[i]->texcoord[2]]->v);
                 }
                 glVertex3f(vertices[faces[i]->vertices[2]]->x,vertices[faces[i]->vertices[2]]->y,vertices[faces[i]->vertices[2]]->z);
                 
@@ -379,10 +380,12 @@ bool ObjLoader::loadTexture (const char* filename,sf::Texture* &tex){
     //----------ERROR POSSIBLE HERE---------------------//
     sf::Image img;
     if(!img.loadFromFile(filename)){
+        cout << " Couldn't Load Image \n";
         return false;
     }
     tex = new sf::Texture;
     if(!tex->loadFromImage(img)){
+        cout << "Couldn't Load Texture from image. \n";
         return false;
     }   
     return true;
