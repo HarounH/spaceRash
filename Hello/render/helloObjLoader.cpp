@@ -4,10 +4,16 @@
 #include <iostream>
 /*
 linker:
--lsfml-graphics -lsfml-window -lsfml-system -lGL
-*/
+-lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lGL -lGLU*/
 using namespace std;
-#include "../Source/obj_Loader.cpp"
+#include "../../Source/obj_Loader.cpp"
+
+void lettherebelight() {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+}
+
 
 int main(int argc, char** argv) {
     // create the window
@@ -16,7 +22,27 @@ int main(int argc, char** argv) {
 
     // load resources, initialize the OpenGL states, ...
     ObjLoader test("UFO"); //pass name.
+    test.LoadObjectFile("untitled2.obj");
+    //test.print(true);
+    cout << "#brk1\n";
+    glEnable(GL_DEPTH_TEST);
+    //glDepthMask(GL_TRUE);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(90.0f,1.33,0.1f,3000.0f);
     
+    gluLookAt( 5,0,5,
+        0.0,0.0,0.0,
+    0,1.0,0);
+    lettherebelight();
+    
+    glViewport(0, 0, 800, 600);
+    glFlush();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    cout << "#brk2\n";
     // run the main loop
     bool running = true;
     while (running)
@@ -45,7 +71,7 @@ int main(int argc, char** argv) {
                 glTranslated(x,y,z);
             } else if ( event.type == sf::Event::MouseMoved ) {
                 double x,y,z; x = y = z = 0;
-                std::cout << "mouseMove=(" << event.mouseMove.x << "," << event.mouseMove.y << ")\n";
+                //std::cout << "mouseMove=(" << event.mouseMove.x << "," << event.mouseMove.y << ")\n";
                 if ( event.mouseMove.x < 50 ) {
                     x -= 0.05;
                 } else if ( event.mouseMove.x > 750) {
@@ -62,17 +88,20 @@ int main(int argc, char** argv) {
 
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glBegin(GL_POLYGON);
-        glVertex2f(0.0,0.0);
-        glVertex2f(1.0,0.0);
-        glVertex2f(0.0,1.0);
-        glEnd();
+        glPushMatrix();
+        glRotatef(45.0f,1.0,0.0,0.0);
+        test.render();
+        glPopMatrix();
+        // glBegin(GL_POLYGON);
+        // glVertex2f(0.0,0.0);
+        // glVertex2f(1.0,0.0);
+        // glVertex2f(0.0,1.0);
+        // glEnd();
         // draw...
 
         // end the current frame (internally swaps the front and back buffers)
         window.display();
     }
-
     // release resources...
 
     return 0;
