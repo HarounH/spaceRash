@@ -10,13 +10,26 @@
 #include <boost/serialization/vector.hpp>
 #include <sstream>
 
+void Player::setGameMode(std::string myip, unsigned short myport , bool startmode, std::string otherip, unsigned short otherport, int numPlayers, int numAIs) {
+	if(startmode)
+	{
+		startNetwork(myip, myport);
+		didStart = true;
+	}
+	else
+	{
+		connectToNetwork(otherip, otherport, myip, myport);
+		didStart = false;
+	}
+}
+
 void Player::startNetwork(string local_ip, unsigned short local_port) {
 	network = new NetworkManager(local_ip, local_port);
 }
 
 void Player::connectToNetwork(string IP, unsigned short server_port, string local_ip, unsigned short local_port) {
 	network = new NetworkManager(IP, server_port, local_ip, local_port);
-	myMessage->setData((int)CONNECTDATA, network->getMyIP(), network->getMyPort());
+	myMessage->setData((int)CONNECTDATA, local_ip, local_port);
 	sendMessage();
 }
 

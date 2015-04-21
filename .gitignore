@@ -6,7 +6,7 @@
 *.exe
 *.o
 *.so
+*.tang
 # OS Files #
 .DS_Store
 .DS_Store?
-

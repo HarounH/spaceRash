@@ -87,7 +87,7 @@ public:
 
 	void select_ship_screen();
 	void startjoin_screen();
-	void setGameMode(std::string myip, unsigned short myport , bool startmode=true);
+	void setGameMode(std::string myip, unsigned short myport , bool startmode = true, std::string otherip = "", unsigned short otherport = 0, int numPlayers = 0, int numAIs = 0);
 	void start_game();
 	void connect_game();
 	void waiting_screen();
