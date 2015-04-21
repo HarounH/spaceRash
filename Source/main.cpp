@@ -32,25 +32,43 @@ int main(int argc, char** argv) {
     string myip, connect_to_ip;
 
     double dt = 1.0;
-    // if (argc==3) {
-    //     //listener.
-    //     myport = (unsigned short)atoi(argv[1]);
-    //     myip = argv[2];
-    //     usr->startNetwork(myip, myport);
-    //     usr->started(true);
-        
-    // } else if ( argc == 5 ) {
-    //     //connector.
-    //     myport = (unsigned short)atoi(argv[1]);
-    //     myip = argv[2];
-    //     connect_to_ip = argv[3];
-    //     connect_to_port = (unsigned short)atoi(argv[4]);
-    //     usr->getFighter()->getRigidBody()->translate(btVector3(0,0,10));
-    //     usr->connectToNetwork(connect_to_ip , connect_to_port , myip , myport);
-    // } else {
-    //     cout << "invalid connection type. EXIT\n";
-    //     exit(1);
-    // }
+    {
+        sf::Window wnd(sf::VideoMode(270 , 273), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
+        sfg::SFGUI sfgui;
+        auto sfgwnd = sfg::Window::Create();
+        sfgwnd->SetTitle("Start Game/Join Game");
+        sfgwnd->Add(lonelyTable);
+        sfg::Desktop desktop;
+        desktop.Add(sfgwnd);
+        bool internalRunning = true;
+        sf::Event event;
+        int numJoined = 0;
+        while(internalRunning) {
+            while(wnd.pollEvent(event)) {
+                desktop.HandleEvent(event);
+                if ( event.type == sf::Event::Closed) {
+                    internalRunning = false;
+                }
+            }
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            desktop.Update(0.0f);
+            sfgui.Display(wnd);
+            wnd.display();
+            if(didStart)
+            {
+                usr->receiveMessage();
+                if(usr->numberOfPlayers() == 0)
+                    internalRunning = false;
+
+            }
+            else
+            {
+                usr->receiveMessage();
+                if(usr->beginGame())
+                    internalRunning = false;
+            }
+        }
+    }
     
     sf::Window window(sf::VideoMode(usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY), "spaceRash" , sf::Style::Default, sf::ContextSettings(32));
     usr->setup_game_screen( usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY );

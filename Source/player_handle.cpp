@@ -35,6 +35,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				(myMessage->ship).linearVelocity.push_back(lv.getY());
 				(myMessage->ship).linearVelocity.push_back(lv.getZ());
 				sendMessage();
+				numPlayers--;
 			}
 		}
 	}

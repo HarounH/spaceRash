@@ -10,10 +10,12 @@
 #include <boost/serialization/vector.hpp>
 #include <sstream>
 
-void Player::setGameMode(std::string myip, unsigned short myport , bool startmode, std::string otherip, unsigned short otherport, int numPlayers, int numAIs) {
+void Player::setGameMode(std::string myip, unsigned short myport , bool startmode, std::string otherip, unsigned short otherport, int _numPlayers, int _numAIs) {
 	if(startmode)
 	{
 		startNetwork(myip, myport);
+		numPlayers = _numPlayers;
+		numAIs = _numAIs;
 		didStart = true;
 	}
 	else
@@ -38,6 +40,10 @@ void Player::setGeneralData() {
 	sendMessage();
 }
 
+void Player::sendMessage(std::string& message) {
+	network->SendToAll(message);
+}
+
 void Player::sendMessage() {
 	std::ostringstream archive_stream;
 	boost::archive::text_oarchive archive(archive_stream);
@@ -56,7 +62,9 @@ void Player::translateMessage(ClientMessage inMessage) {
 
 void Player::receiveMessage() {
 	ClientMessage inMessage = network->popMessage();
-	if(inMessage.first != "")
+	if(inMessage.first == "go")
+		startGame = true;
+	else if(inMessage.first != "")
 		translateMessage(inMessage);
 }
 
