@@ -1,3 +1,6 @@
+#ifndef obj_Loader_hpp 
+#define obj_Loader_hpp
+
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <cstdlib>
@@ -8,6 +11,7 @@
 #include <cstdio>
 #include <iostream>
 #include <unordered_map>
+#include "helpers.hpp"
 
 
 struct coordinate{
@@ -20,8 +24,8 @@ struct material{
         float alpha,ns,ni;      //some property, alpha, shininess, and some other, which we not used
         float diff[3],amb[3],spec[3];    //the color property (diffuse, ambient, specular)
         int illum;      //illum - we not use it
-        int texture;    //the id for the texture, if there is no texture than -1
-        material(float al,float n,float ni2,float* d,float* a,float* s,int i,int t);
+        sf::Texture* texture;    
+        material(float al,float n,float ni2,float* d,float* a,float* s,int i,sf::Texture *t);
 };
 struct face{
         int numV,numT,numN;      // Square Face or triangular face        
@@ -29,10 +33,11 @@ struct face{
         std::vector<int> texcoord;        //indexes for every texture coordinate that is in the face, starting from 1 
         std::vector<int> normals;
         material* mat;                //the index for the material, which is used by the face
-        face(std::vector<int>& v,std::vector<int>& tex,std::vector<int>& n,material* m);   
+        face(std::vector<int>& v,std::vector<int>& tex,std::vector<int>& n,material* m,bool f);   
         ~face(){
         	delete mat;
         }  
+        bool four;
 };
 struct texcoord{
 	float u,v;
@@ -41,7 +46,7 @@ struct texcoord{
 
 class ObjLoader{
 	std::string name;
-	
+	SpaceObject* fighter;
 	std::vector<coordinate*> vertices; 
 	std::vector<face*> faces;
 	std::vector<coordinate* > normals;
@@ -50,24 +55,18 @@ class ObjLoader{
 	std::unordered_map<std::string,material*> materials;
 	std::vector<texcoord*> textureCoordinates;
 	bool ismaterial,isnormals,istexture; 
-	unsigned int loadTexture(const char* filename);
+	bool loadTexture(const char* filename,sf::Texture* &);
 	void clean();
+	int ID;
 public:
-	/*void displayVertices(){
-		for(int i=0;i<vertices.size();i++){
-			std::cout<<vertices[i]->x<<" "<<vertices[i]->y<<" "<<vertices[i]->z<<"\n";
-		}
-	}
-	void displayMaterials(){
-		for(std::unordered_map<std::string,material*> ::const_iterator it=materials.begin();it!=materials.end();it++){
-			std::cout<<"\n"<<it->first<<"\n"<<it->second->alpha<<"\n"<<it->second->ns<<"\n"<<it->second->ni<<"\n"<<it->second->diff[0]<<" "<<it->second->diff[1]<<" "<<it->second->diff[2]<<"\n"<<it->second->amb[0]<<" "<<it->second->amb[1]<<" "<<it->second->amb[2]<<"\n"<<it->second->spec[0]<<" "<<it->second->spec[1]<<" "<<it->second->spec[2]<<"\n"<<it->second->illum<<"\n"<<it->second->texture<<"\n";
-		}
-	}*/
+	
 	ObjLoader(std::string Name);
 	~ObjLoader(){
 		clean();
 	};
 	int LoadObjectFile(const char* filename);
 	int LoadMaterialsFile(const char* filename);
+	int returnID();
 	void render();
 };
+#endif
