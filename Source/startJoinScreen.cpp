@@ -5,7 +5,7 @@
 StartJoinScreen::StartJoinScreen(Player*& _usr) {
 	usrptr = _usr;
 	internalRunning = true;
-	
+		
 }
 
 StartJoinScreen::~StartJoinScreen() {

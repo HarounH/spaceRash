@@ -12,19 +12,19 @@ using namespace std;
 using namespace std;
 int main(int argc, char** argv) {
     Player* usr = new Player();
+    cout << "#brk1\n";
     usr->setFighterType(UFO);
+    cout << "#brk2\n";
     usr->init_fighter();
-    
+    cout << "#brk3\n";
     std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(1) ;
     (*displayList)[0] = usr->getFighter();
-    
-    // cout << "#brk1\n";
-    // bool selectionDone=false;
-    // SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
-    // cout << "#brk2\n";
-    // selectShipScreen->Run2(selectionDone);
-    // StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
-    // startJoinScreen->Run();
+
+    bool selectionDone=false;
+    SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
+    selectShipScreen->Run2(selectionDone);
+    StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
+    startJoinScreen->Run();
     // cout << "#brk3\n";
     
 
@@ -59,32 +59,32 @@ int main(int argc, char** argv) {
             desktop.Update(0.0f);
             sfgui.Display(wnd);
             wnd.display();
-            // if(usr->started())
-            // {
-            //     usr->receiveMessage();
-            //     string m = "go";
-            //     usr->sendMessage(m);
-            //     if(usr->numberOfPlayers() == 0)
-            //     {
-            //         internalRunning = false;
-            //     }
-            // }
-            // else
-            // {
-            //     usr->receiveMessage();
-            //     if(usr->beginGame())
-            //         internalRunning = false;
-            // }
-            // if(!internalRunning)
-            // {
-            //     for(int i = 3; i >= 0; i--)
-            //     {
-            //         std::string m = "Starting in ";
-            //         m += to_string(i);
-            //         waitLabel->SetText(m);
-            //         usleep(1000);
-            //     }
-            // }
+            if(usr->started())
+            {
+                usr->receiveMessage();
+                if(usr->numberOfPlayers() == 1)
+                {
+                    string m = "go";
+                    usr->sendMessage(m);
+                    internalRunning = false;
+                }
+            }
+            else
+            {
+                usr->receiveMessage();
+                if(usr->beginGame())
+                    internalRunning = false;
+            }
+            if(!internalRunning)
+            {
+                for(int i = 3; i >= 0; i--)
+                {
+                    std::string m = "Starting in ";
+                    m += to_string(i);
+                    waitLabel->SetText(m);
+                    usleep(1000);
+                }
+            }
         }
     }
     
@@ -132,7 +132,8 @@ int main(int argc, char** argv) {
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
         window.display();
-        //usr->receiveMessage();
+        // for(int i = 0; i < 4; i++)
+            //usr->receiveMessage();
     }
     delete usr;
 	return 1;

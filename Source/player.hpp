@@ -64,7 +64,7 @@ public:
 	void started(bool _didStart) { didStart = _didStart; }
 	bool beginGame() { return startGame; }
 
-	bool numberOfPlayers() { return numPlayers; }
+	int numberOfPlayers() { return numPlayers; }
 
 	SpaceObject* which_spaceObject(int network_int);
 
