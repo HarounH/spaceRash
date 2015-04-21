@@ -5,6 +5,8 @@ using namespace std;
 
 
 #include <string.h> //because character arrays.
+#include <unistd.h>
+#include <string>
 #include <iostream>
 #include <fstream>
 /** sfml includes */

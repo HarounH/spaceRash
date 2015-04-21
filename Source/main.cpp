@@ -33,16 +33,21 @@ int main(int argc, char** argv) {
 
     double dt = 1.0;
     {
-        sf::Window wnd(sf::VideoMode(270 , 273), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
+        sf::Window wnd(sf::VideoMode(150 , 150), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
         sfg::SFGUI sfgui;
+        auto lonelyTable = sfg::Table::Create();
+        auto waitLabel = sfg::Label::Create("Waiting...");
+
+        lonelyTable->SetRowSpacings(5.f);
+        lonelyTable->SetColumnSpacings(5.f);
+        lonelyTable->Attach(waitLabel , sf::Rect<sf::Uint32>(0,0,1,1) , sfg::Table::EXPAND|sfg::Table::FILL ,sfg::Table::EXPAND|sfg::Table::FILL );
+
         auto sfgwnd = sfg::Window::Create();
-        sfgwnd->SetTitle("Start Game/Join Game");
         sfgwnd->Add(lonelyTable);
         sfg::Desktop desktop;
         desktop.Add(sfgwnd);
         bool internalRunning = true;
         sf::Event event;
-        int numJoined = 0;
         while(internalRunning) {
             while(wnd.pollEvent(event)) {
                 desktop.HandleEvent(event);
@@ -54,19 +59,32 @@ int main(int argc, char** argv) {
             desktop.Update(0.0f);
             sfgui.Display(wnd);
             wnd.display();
-            if(didStart)
-            {
-                usr->receiveMessage();
-                if(usr->numberOfPlayers() == 0)
-                    internalRunning = false;
-
-            }
-            else
-            {
-                usr->receiveMessage();
-                if(usr->beginGame())
-                    internalRunning = false;
-            }
+            // if(usr->started())
+            // {
+            //     usr->receiveMessage();
+            //     string m = "go";
+            //     usr->sendMessage(m);
+            //     if(usr->numberOfPlayers() == 0)
+            //     {
+            //         internalRunning = false;
+            //     }
+            // }
+            // else
+            // {
+            //     usr->receiveMessage();
+            //     if(usr->beginGame())
+            //         internalRunning = false;
+            // }
+            // if(!internalRunning)
+            // {
+            //     for(int i = 3; i >= 0; i--)
+            //     {
+            //         std::string m = "Starting in ";
+            //         m += to_string(i);
+            //         waitLabel->SetText(m);
+            //         usleep(1000);
+            //     }
+            // }
         }
     }
     
