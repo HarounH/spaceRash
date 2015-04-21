@@ -32,25 +32,61 @@ int main(int argc, char** argv) {
     string myip, connect_to_ip;
 
     double dt = 1.0;
-    // if (argc==3) {
-    //     //listener.
-    //     myport = (unsigned short)atoi(argv[1]);
-    //     myip = argv[2];
-    //     usr->startNetwork(myip, myport);
-    //     usr->started(true);
-        
-    // } else if ( argc == 5 ) {
-    //     //connector.
-    //     myport = (unsigned short)atoi(argv[1]);
-    //     myip = argv[2];
-    //     connect_to_ip = argv[3];
-    //     connect_to_port = (unsigned short)atoi(argv[4]);
-    //     usr->getFighter()->getRigidBody()->translate(btVector3(0,0,10));
-    //     usr->connectToNetwork(connect_to_ip , connect_to_port , myip , myport);
-    // } else {
-    //     cout << "invalid connection type. EXIT\n";
-    //     exit(1);
-    // }
+    {
+        sf::Window wnd(sf::VideoMode(150 , 150), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
+        sfg::SFGUI sfgui;
+        auto lonelyTable = sfg::Table::Create();
+        auto waitLabel = sfg::Label::Create("Waiting...");
+
+        lonelyTable->SetRowSpacings(5.f);
+        lonelyTable->SetColumnSpacings(5.f);
+        lonelyTable->Attach(waitLabel , sf::Rect<sf::Uint32>(0,0,1,1) , sfg::Table::EXPAND|sfg::Table::FILL ,sfg::Table::EXPAND|sfg::Table::FILL );
+
+        auto sfgwnd = sfg::Window::Create();
+        sfgwnd->Add(lonelyTable);
+        sfg::Desktop desktop;
+        desktop.Add(sfgwnd);
+        bool internalRunning = true;
+        sf::Event event;
+        while(internalRunning) {
+            while(wnd.pollEvent(event)) {
+                desktop.HandleEvent(event);
+                if ( event.type == sf::Event::Closed) {
+                    internalRunning = false;
+                }
+            }
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            desktop.Update(0.0f);
+            sfgui.Display(wnd);
+            wnd.display();
+            // if(usr->started())
+            // {
+            //     usr->receiveMessage();
+            //     string m = "go";
+            //     usr->sendMessage(m);
+            //     if(usr->numberOfPlayers() == 0)
+            //     {
+            //         internalRunning = false;
+            //     }
+            // }
+            // else
+            // {
+            //     usr->receiveMessage();
+            //     if(usr->beginGame())
+            //         internalRunning = false;
+            // }
+            // if(!internalRunning)
+            // {
+            //     for(int i = 3; i >= 0; i--)
+            //     {
+            //         std::string m = "Starting in ";
+            //         m += to_string(i);
+            //         waitLabel->SetText(m);
+            //         usleep(1000);
+            //     }
+            // }
+        }
+    }
     
     sf::Window window(sf::VideoMode(usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY), "spaceRash" , sf::Style::Default, sf::ContextSettings(32));
     usr->setup_game_screen( usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY );

@@ -17,6 +17,9 @@ Player::Player() {
 	skybox->setImage();
 	camera_idx = 0;
 	didStart = false;
+	startGame = false;
+	numPlayers = 0;
+	numAIs = 0;
 	hasSetInitialPosition = false;
 }
 

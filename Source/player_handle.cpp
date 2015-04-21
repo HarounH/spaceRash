@@ -21,20 +21,21 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
-				btVector3 mylv = fighter->getRigidBody()->getCenterOfMassPosition();
-				(myMessage->ship).linearVelocity.clear();
-				(myMessage->ship).linearVelocity.push_back(mylv.getX());
-				(myMessage->ship).linearVelocity.push_back(mylv.getY());
-				(myMessage->ship).linearVelocity.push_back(mylv.getZ());
+				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+				float temp[16];
+				mytrans.getOpenGLMatrix(temp);
+				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
 				*(myMessage) = msg;
-				btVector3 lv(0, 0, 0);
-				getNextValidPosition(lv);
-				(myMessage->ship).linearVelocity.clear();
-				(myMessage->ship).linearVelocity.push_back(lv.getX());
-				(myMessage->ship).linearVelocity.push_back(lv.getY());
-				(myMessage->ship).linearVelocity.push_back(lv.getZ());
+				myMessage->msgType = (int) SETCONNECTDATA;
+				btVector3 np(0, 0, 0);
+				getNextValidPosition(np);
+				btTransform yourTrans;
+				yourTrans.setOrigin(np);
+				yourTrans.getOpenGLMatrix(temp);
+				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
+				numPlayers--;
 			}
 		}
 	}
@@ -49,11 +50,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				//add this spaceObject to list of objects
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				newObject->init(bulletWorld);
-				btVector3 newPos;
-				newPos.setX(msg.ship.linearVelocity[0]);
-				newPos.setY(msg.ship.linearVelocity[1]);
-				newPos.setZ(msg.ship.linearVelocity[2]);
-				newObject->getRigidBody()->translate(newPos);
+				btTransform t;
+				float temp[16];
+				for(int i=0; i<16; ++i) {
+					temp[i] = msg.ship.transform[i];
+				}
+				t.setFromOpenGLMatrix(temp);
+				newObject->getRigidBody()->setWorldTransform(t);
+				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
@@ -61,46 +65,52 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
-				btVector3 mylv = fighter->getRigidBody()->getCenterOfMassPosition();
-				(myMessage->ship).linearVelocity.clear();
-				(myMessage->ship).linearVelocity.push_back(mylv.getX());
-				(myMessage->ship).linearVelocity.push_back(mylv.getY());
-				(myMessage->ship).linearVelocity.push_back(mylv.getZ());
+				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+				mytrans.getOpenGLMatrix(temp);
+				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
+
 				*(myMessage) = msg;
 				sendMessage();
 			}
 			else if(which_spaceObject(client_id) == nullptr) {
+
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				newObject->init(bulletWorld);
-				btVector3 newPos;
-				newPos.setX(msg.ship.linearVelocity[0]);
-				newPos.setY(msg.ship.linearVelocity[1]);
-				newPos.setZ(msg.ship.linearVelocity[2]);
-				newObject->getRigidBody()->translate(newPos);
+				btTransform t;
+				float temp[16];
+				for(int i=0; i<16; ++i) {
+					temp[i] = msg.ship.transform[i];
+				}
+				t.setFromOpenGLMatrix(temp);
+				newObject->getRigidBody()->setWorldTransform(t);
+				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(client_id, nextPlayerId);
 				}
+
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
-				btVector3 mylv = fighter->getRigidBody()->getCenterOfMassPosition();
-				(myMessage->ship).linearVelocity.clear();
-				(myMessage->ship).linearVelocity.push_back(mylv.getX());
-				(myMessage->ship).linearVelocity.push_back(mylv.getY());
-				(myMessage->ship).linearVelocity.push_back(mylv.getZ());
+				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+				mytrans.getOpenGLMatrix(temp);
+				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
+
 				myMessage = &msg;
 				sendMessage();
 			}
 		}
 		else if(!hasSetInitialPosition)
 		{
-			btVector3 newPos;
-			newPos.setX(msg.ship.linearVelocity[0]);
-			newPos.setY(msg.ship.linearVelocity[1]);
-			newPos.setZ(msg.ship.linearVelocity[2]);
-			fighter->getRigidBody()->translate(newPos);
+			btTransform t;
+			float temp[16];
+			for(int i=0; i<16; ++i) {
+				temp[i] = msg.ship.transform[i];
+			}
+			t.setFromOpenGLMatrix(temp);
+			fighter->getRigidBody()->setWorldTransform(t);
+			bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 			hasSetInitialPosition = true;
 		}
 	}

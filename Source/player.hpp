@@ -26,6 +26,9 @@ private:
 	/* misc data. */
 	bool didStart;
 	bool hasSetInitialPosition;
+	int numAIs;
+	int numPlayers;
+	bool startGame;
 
 	bool rotatePressed;
 	int nextSpaceObjId;
@@ -59,6 +62,9 @@ public:
 
 	bool started() { return didStart; }
 	void started(bool _didStart) { didStart = _didStart; }
+	bool beginGame() { return startGame; }
+
+	bool numberOfPlayers() { return numPlayers; }
 
 	SpaceObject* which_spaceObject(int network_int);
 
@@ -87,7 +93,7 @@ public:
 
 	void select_ship_screen();
 	void startjoin_screen();
-	void setGameMode(std::string myip, unsigned short myport , bool startmode=true);
+	void setGameMode(std::string myip, unsigned short myport , bool startmode = true, std::string otherip = "", unsigned short otherport = 0, int _numPlayers = 0, int _numAIs = 0);
 	void start_game();
 	void connect_game();
 	void waiting_screen();
@@ -99,6 +105,7 @@ public:
 	void connectToNetwork(string, unsigned short, string, unsigned short);
 	void setGeneralData();
 	void sendMessage();
+	void sendMessage(std::string&);
 	void translateMessage(ClientMessage);
 	void receiveMessage();
 	void handleMessage(Message, int);

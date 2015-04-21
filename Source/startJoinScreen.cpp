@@ -15,11 +15,15 @@ StartJoinScreen::~StartJoinScreen() {
 void StartJoinScreen::onStartButtonClick() {
 	std::string myip = myIPEntry->GetText();
 	std::string str_myport = myPortEntry->GetText();
+	std::string str_nplayers = nPlayersEntry->GetText();
+	std::string str_naiplayers = nAIPlayersEntry->GetText();
 	if(myip == "" || str_myport == "")
 		return;
 	unsigned short myport = (unsigned short) stoul(str_myport);
-	
-	//usrptr->setGameMode(myip, myport , /*joinmode=*/true);
+	int numPlayers = (int) stol(str_nplayers);
+	int numAIs = (int) stol(str_naiplayers);
+	usrptr->setGameMode(myip, myport, true, "", 0, numPlayers, numAIs);
+	internalRunning = false;
 }
 
 void StartJoinScreen::onJoinButtonClick() {
@@ -31,7 +35,8 @@ void StartJoinScreen::onJoinButtonClick() {
 		return;
 	unsigned short myport = (unsigned short) stoul(str_myport);
 	unsigned short otherport = (unsigned short) stoul(otherport_str);
-	//usrptr->setGameMode(myip, myport , /*joinmode=*/false , otherip , otherport );
+	usrptr->setGameMode(myip, myport, false, otherip, otherport);
+	internalRunning  = false;
 }
 
 void StartJoinScreen::Run() {
