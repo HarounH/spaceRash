@@ -102,10 +102,14 @@ int main(int argc, char** argv) {
     // otr->init(usr->getBulletWorld());
     // otr->getRigidBody()->translate(btVector3(0,0,-10));
     // usr->addToEveryOne(1,otr);
+    double dt1;
+    double dt2;
 
     while (running)
     {
         // handle events
+        dt1 = clock();
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -126,8 +130,6 @@ int main(int argc, char** argv) {
         usr->resetMouse(window);
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        usr->update_state(dt);
-        usr->render_state(dt);
         //---------------------------------------------//
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
@@ -135,7 +137,14 @@ int main(int argc, char** argv) {
         usr->setGeneralData();
         for(int i = 0; i < 4; i++)
             usr->receiveMessage();
-        usleep(15000);
+
+        usr->update_state(dt2);
+        usr->render_state(dt2);
+        dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;
+        dt2 = dt1;
+        int sleep = (15000) - (dt1 * 1000000);
+        if(sleep > 0)
+            usleep((unsigned int) sleep);
     }
     delete usr;
 	return 1;

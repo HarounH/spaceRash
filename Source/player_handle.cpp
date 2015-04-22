@@ -64,7 +64,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
+				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
@@ -93,7 +93,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
+				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -114,7 +114,7 @@ void Player::handleMessage(Message msg, int network_int) {
 			}
 			t.setFromOpenGLMatrix(temp);
 			fighter->getRigidBody()->setWorldTransform(t);
-			bulletWorld->dynamicsWorld->stepSimulation(0.0f);
+			bulletWorld->dynamicsWorld->stepSimulation(0.00001f);
 			hasSetInitialPosition = true;
 		}
 	}
