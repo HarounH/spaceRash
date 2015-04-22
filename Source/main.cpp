@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     unsigned short myport, connect_to_port;
     string myip, connect_to_ip;
 
-    double dt = 1.0;
+    double dt = 0.03;
     {
         sf::Window wnd(sf::VideoMode(150 , 150), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
         sfg::SFGUI sfgui;
@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
         usr->setGeneralData();
         for(int i = 0; i < 4; i++)
             usr->receiveMessage();
-        usleep(100000);
+        usleep(15000);
     }
     delete usr;
 	return 1;
