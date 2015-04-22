@@ -9,6 +9,8 @@ using namespace std;
 #include "player.hpp"
 #include "helpers.hpp"
 
+#define TICKS 10
+
 using namespace std;
 int main(int argc, char** argv) {
     Player* usr = new Player();
@@ -104,7 +106,7 @@ int main(int argc, char** argv) {
     // usr->addToEveryOne(1,otr);
     double dt1;
     double dt2;
-
+    int ctr=0;
     while (running)
     {
         // handle events
@@ -131,20 +133,24 @@ int main(int argc, char** argv) {
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //---------------------------------------------//
+        usr->update_state(dt);
+        usr->render_state(dt);
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
         window.display();
-        usr->setGeneralData();
-        for(int i = 0; i < 4; i++)
-            usr->receiveMessage();
-
-        usr->update_state(dt2);
-        usr->render_state(dt2);
+        if ( ctr%TICKS==0 ) {
+            usr->setGeneralData();
+            for(int i = 0; i < 4; i++)
+                usr->receiveMessage();
+        } 
+        ctr = (ctr+1)%TICKS ;
+        
         dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;
         dt2 = dt1;
         int sleep = (15000) - (dt1 * 1000000);
-        if(sleep > 0)
+        if(sleep > 0) {
             usleep((unsigned int) sleep);
+        }
     }
     delete usr;
 	return 1;
