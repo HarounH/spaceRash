@@ -9,9 +9,18 @@ using namespace std;
 #include "../../Source/obj_Loader.cpp"
 
 void lettherebelight() {
+    float ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    float diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+    float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    float lpos[] = {-100.0f, 0.0f, 0.0f, 1.0f};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
+
 }
 
 
@@ -22,8 +31,9 @@ int main(int argc, char** argv) {
 
     // load resources, initialize the OpenGL states, ...
     ObjLoader test("UFO"); //pass name.
-    test.LoadObjectFile("untitled2.obj");
-    //test.print(true);
+    test.LoadObjectFile("untitled.obj");
+
+    test.print(true);
     cout << "#brk1\n";
     glEnable(GL_DEPTH_TEST);
     //glDepthMask(GL_TRUE);
@@ -33,7 +43,7 @@ int main(int argc, char** argv) {
     glLoadIdentity();
     gluPerspective(90.0f,1.33,0.1f,3000.0f);
     
-    gluLookAt( 5,0,5,
+    gluLookAt( 50,0,50,
         0.0,0.0,0.0,
     0,1.0,0);
     lettherebelight();
@@ -88,6 +98,7 @@ int main(int argc, char** argv) {
 
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glGetError();
         glPushMatrix();
         glRotatef(45.0f,1.0,0.0,0.0);
         test.render();
