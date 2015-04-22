@@ -56,7 +56,7 @@ void material::print(bool x) {
         cout << "diff{" << diff[0] << "," << diff[1] << "," << diff[2] << "}\n";
         cout << "amb{" << amb[0] << "," << amb[1] << "," << amb[2] << "}\n";
         cout << "spec{" << spec[0] << "," << spec[1] << "," << spec[2] << "}\n";
-        cout << (!texture) << "\n";
+        cout << ((!texture)?("null texture"):("loaded texture")) << "\n";
     }
 }
    //nothing to explain here
@@ -94,6 +94,7 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
                     continue;
             if(tmp[i][0]=='n' && tmp[i][1]=='e' && tmp[i][2]=='w'){
                     if(ismat){
+                            cout << "Read the upper material \n";
                             std::string tName = name;
                             if(strcmp(fileNm,"\0")!=0){
                                     materials[tName] =  new material(alpha,ns,ni,diff,amb,spec,illum,texture);
@@ -153,6 +154,11 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
                     materials[tName] = new material(alpha,ns,ni,diff,amb,spec,illum,NULL);
             }
     }
+    // for(auto it = materials.begin();it!=materials.end(); ++it) {
+    //     cout << "\nmaterial=" << it->first << "\n";
+    //     it->second->print(true);
+    //     cout << "\n";
+    // }
     delete texture;
     return 0;
 }
@@ -240,17 +246,17 @@ int ObjLoader::LoadObjectFile(const char* filename){ //works.
                                     sscanf(coord[i]->c_str(),"f %d %d %d",&v[0],&v[1],&v[2]);
                                     faces.push_back(new face(v,t,n,currmat,false));
                             }
-                            else if(countS==8 && coord[i]->find("//")!=std::string::npos){
+                            else if(countS==6 && coord[i]->find("//")!=std::string::npos){
                                     n.resize(3);
                                     sscanf(coord[i]->c_str(),"f %d//%d %d//%d %d//%d",&v[0],&n[0],&v[1],&n[1],&v[2],&n[2]);
                                     faces.push_back(new face(v,t,n,currmat,false));
                             }
-                            else if(countS==4){
+                            else if(countS==3){
                                     t.resize(3);
                                     sscanf(coord[i]->c_str(),"f %d/%d %d/%d %d/%d",&v[0],&t[0],&v[1],&t[1],&v[2],&t[2]);
                                     faces.push_back(new face(v,t,n,currmat,false));
                             }
-                            else if(countS==8 && coord[i]->find("//")==std::string::npos){
+                            else if(countS==6 && coord[i]->find("//")==std::string::npos){
                                     t.resize(3);
                                     n.resize(3);
                                     sscanf(coord[i]->c_str(),"f %d/%d/%d %d/%d/%d %d/%d/%d",&v[0],&t[0],&n[0],&v[1],&t[1],&n[1],&v[2],&t[2],&n[2]);
@@ -260,10 +266,11 @@ int ObjLoader::LoadObjectFile(const char* filename){ //works.
             }
 
     }
-    if(materials.size()==0)
+    if(materials.size()==0) {
             ismaterial=false;
-    else
+    }else {
             ismaterial=true;
+    }
     for(int i=0;i<coord.size();i++){
             delete coord[i];
     }
@@ -272,9 +279,15 @@ int ObjLoader::LoadObjectFile(const char* filename){ //works.
 }
 
 void ObjLoader::render(){
+    /*for (int i=0;i<faces.size();i++){
+        cout<<i+1<<" "<<vertices[faces[i]->vertices[0]]->x<<" "vertices[faces[i]->vertices[0]]->y<<" "<<vertices[faces[i]->vertices[0]]->z<<"\n";
+        cout<<i+1<<" "<<vertices[faces[i]->vertices[1]]->x<<" "vertices[faces[i]->vertices[1]]->y<<" "<<vertices[faces[i]->vertices[1]]->z<<"\n";
+        cout<<i+1<<" "<<vertices[faces[i]->vertices[2]]->x<<" "vertices[faces[i]->vertices[2]]->y<<" "<<vertices[faces[i]->vertices[2]]->z<<"\n";
+    }*/
     //--------------E TOH NA HO RAHA----------------//
     // ID = glGenLists(1);
     // glNewList(ID,GL_COMPILE);
+    
     material* mat = NULL;
     for(int i=0;i<faces.size();i++){
         glPushMatrix();
@@ -282,14 +295,16 @@ void ObjLoader::render(){
             float diffuse [] = {faces[i]->mat->diff[0],faces[i]->mat->diff[1],faces[i]->mat->diff[2],1.0};
             float ambient [] = {faces[i]->mat->amb[0],faces[i]->mat->amb[1],faces[i]->mat->amb[2],1.0};
             float specular [] = {faces[i]->mat->spec[0],faces[i]->mat->spec[1],faces[i]->mat->spec[2],1.0};
+            cout<<diffuse[0]<<" "<<diffuse[1]<<" "<<diffuse[2]<<"    "<<ambient[0]<<" "<<ambient[1]<<" "<<ambient[2]<<"     "<<specular[0]<<" "<<specular[1]<<" "<<specular[2]<<"\n";
             glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
             glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
             glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
             mat = faces[i]->mat;
             if(mat->texture!=NULL){
                 cout << "binding texture hi\n";
-                glEnable(GL_TEXTURE_2D);
                 sf::Texture::bind(faces[i]->mat->texture);
+                glEnable(GL_TEXTURE_2D);
+               
             }
             else{
                 glDisable(GL_TEXTURE_2D);
@@ -300,7 +315,7 @@ void ObjLoader::render(){
             
             glBegin(GL_QUADS);
                 if(isnormals){
-                    glNormal3f(normals[faces[i]->normals[0]]->x,normals[faces[i]->normals[1]]->y,normals[faces[i]->normals[2]]->z);
+                    glNormal3f(-1*normals[faces[i]->normals[0]]->x,-1*normals[faces[i]->normals[1]]->y,-1*normals[faces[i]->normals[2]]->z);
                 }
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL)  {//if there are textures
                     glTexCoord2f(textureCoordinates[faces[i]->texcoord[0]]->u,textureCoordinates[faces[i]->texcoord[0]]->v);      //set the texture coorinate
@@ -327,7 +342,7 @@ void ObjLoader::render(){
         }else{
             glBegin(GL_TRIANGLES);
                 if(isnormals){
-                    glNormal3f(normals[faces[i]->normals[0]]->x,normals[faces[i]->normals[0]]->y,normals[faces[i]->normals[0]]->z);
+                    glNormal3f(-1*normals[faces[i]->normals[0]]->x,-1*normals[faces[i]->normals[0]]->y,-1*normals[faces[i]->normals[0]]->z);
                 }
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL)  {//if there are textures 
                     glTexCoord2f(textureCoordinates[faces[i]->texcoord[0]]->u,textureCoordinates[faces[i]->texcoord[0]]->v);      //set the texture coorinate
@@ -364,9 +379,9 @@ void ObjLoader::clean(){
     for(int i=0;i<textureCoordinates.size();i++){
             delete textureCoordinates[i];
     }
-   for(std::unordered_map<std::string,material*> ::const_iterator it=materials.begin();it!=materials.end();it++){
+  /* for(std::unordered_map<std::string,material*> ::const_iterator it=materials.begin();it!=materials.end();it++){
            delete  it->second;
-    }
+    }*/       
     materials.clear();
     faces.clear();
     normals.clear();
@@ -378,11 +393,14 @@ int ObjLoader::returnID(){
 }
 bool ObjLoader::loadTexture (const char* filename,sf::Texture* &tex){
     //----------ERROR POSSIBLE HERE---------------------//
+    
     sf::Image img;
     if(!img.loadFromFile(filename)){
         cout << " Couldn't Load Image \n";
         return false;
     }
+    cout<<filename<<"\n";
+   
     tex = new sf::Texture;
     if(!tex->loadFromImage(img)){
         cout << "Couldn't Load Texture from image. \n";
@@ -403,18 +421,22 @@ void ObjLoader::print(bool debugm) {
     cout << "name=" << name << "\n";
     cout << "\tID=" << ID << "\n";
     cout << "nvertices=" << vertices.size() << "\n";
-        cout << "\tvertices are @" << "\n";
-        for(int i=0; i<vertices.size(); ++i) {
-            if(!vertices[i]) {
-                cout << "NULL VERTEX :(";
-            } else {
-                cout << vertices[i]->x << "," << vertices[i]->y << "," << vertices[i]->z << ")\n";
-            }
-        }
+        // cout << "\tvertices are @" << "\n";
+        // for(int i=0; i<vertices.size(); ++i) {
+        //     if(!vertices[i]) {
+        //         cout << "NULL VERTEX :(";
+        //     } else {
+        //         cout << vertices[i]->x << "," << vertices[i]->y << "," << vertices[i]->z << ")\n";
+        //     }
+        // }
     cout << "nfaces=" << faces.size() << "\n";
     cout << "nNormals=" << normals.size() << "\n";
     cout << "ntexture=" << texture.size() << "\n";
     cout << "nmaterials=" << materials.size() << "\n";
+    for(auto it = materials.begin(); it!=materials.end(); ++it) {
+        cout << "name=" << it->first << "\n";
+        it->second->print(true);
+    }
     cout << "is(mat,normal,tex)=" << ismaterial << isnormals << istexture << ")\n";
 
     for( auto i =materials.begin(); i!= materials.end(); ++i) {
