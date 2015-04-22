@@ -230,6 +230,7 @@ void SpaceObject::setState(State& shipdata) {
 	OBJECT_TYPE otype;
 	shipdata.getData(myNewHealth, myNewAmmo, myNewTransform, myNewLinearVelocity, myNewAngularVelocity, otype);
 	body->setWorldTransform(myNewTransform);
+	world->dynamicsWorld->stepSimulation(0.00001f);
 	body->setLinearVelocity(myNewLinearVelocity);
 	body->setAngularVelocity(myNewAngularVelocity);
 	health = myNewHealth;

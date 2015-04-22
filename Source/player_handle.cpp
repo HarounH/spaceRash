@@ -31,6 +31,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				btVector3 np(0, 0, 0);
 				getNextValidPosition(np);
 				btTransform yourTrans;
+				yourTrans.setIdentity();
 				yourTrans.setOrigin(np);
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
@@ -56,13 +57,15 @@ void Player::handleMessage(Message msg, int network_int) {
 					temp[i] = msg.ship.transform[i];
 				}
 				t.setFromOpenGLMatrix(temp);
-				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(nextClientId, nextPlayerId);
 				}
+
+				newObject->getRigidBody()->setWorldTransform(t);
+				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -83,13 +86,14 @@ void Player::handleMessage(Message msg, int network_int) {
 					temp[i] = msg.ship.transform[i];
 				}
 				t.setFromOpenGLMatrix(temp);
-				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(client_id, nextPlayerId);
 				}
+
+				newObject->getRigidBody()->setWorldTransform(t);
+				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -97,7 +101,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
 
-				myMessage = &msg;
+				*(myMessage) = msg;
 				sendMessage();
 			}
 		}
@@ -110,7 +114,7 @@ void Player::handleMessage(Message msg, int network_int) {
 			}
 			t.setFromOpenGLMatrix(temp);
 			fighter->getRigidBody()->setWorldTransform(t);
-			bulletWorld->dynamicsWorld->stepSimulation(0.0f);
+			bulletWorld->dynamicsWorld->stepSimulation(0.00001f);
 			hasSetInitialPosition = true;
 		}
 	}
