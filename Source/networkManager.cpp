@@ -195,7 +195,6 @@ void NetworkManager::SendToAllExcept(const std::string& message, long long clien
 
 void NetworkManager::SendToAll(const std::string& message){
 	typedef ClientList::const_iterator it;
-	cout << (int) clients.size() << "\n";
 	for(it iter = clients.begin(), iend = clients.end();  iter != iend; ++iter ) {
 		SendToClient(message,iter->left);
 	}

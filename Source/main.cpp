@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
                     std::string m = "Starting in ";
                     m += to_string(i);
                     waitLabel->SetText(m);
-                    usleep(1000);
+                    usleep(1000000);
                 }
             }
         }
@@ -132,8 +132,10 @@ int main(int argc, char** argv) {
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
         window.display();
-        // for(int i = 0; i < 4; i++)
-            //usr->receiveMessage();
+        usr->setGeneralData();
+        for(int i = 0; i < 4; i++)
+            usr->receiveMessage();
+        usleep(100000);
     }
     delete usr;
 	return 1;
