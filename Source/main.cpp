@@ -8,12 +8,24 @@ using namespace std;
 #include "spaceObject.hpp"
 #include "player.hpp"
 #include "helpers.hpp"
-
+#include "ObjManager.hpp"
 #define TICKS 10
 
 using namespace std;
 int main(int argc, char** argv) {
-    Player* usr = new Player();
+    //-----------SETTING PATHS TO THE OBJECTS TO BE RENDERED-------//
+    vector<string> filePaths(4);
+    filePaths[0] = OBJ_RSC_DIR+TIEF_FNAME+OBJ_EXTENSION;
+    filePaths[1] = OBJ_RSC_DIR+XWING_FNAME+OBJ_EXTENSION;
+    filePaths[2] = OBJ_RSC_DIR+SKYRISE_TALL_FNAME+OBJ_EXTENSION;
+    filePaths[3] = OBJ_RSC_DIR+SKYRISE_FAT_FNAME+OBJ_EXTENSION;
+    ObjManager* mObjManager;
+    // cout << "#brk3\n";
+    mObjManager = new ObjManager;
+    mObjManager->LoadAllObjects(filePaths);
+
+    //---------------LET THE GAMES BEGIN--------------------------//
+    Player* usr = new Player(mObjManager);
     cout << "#brk1\n";
     usr->setFighterType(UFO);
     cout << "#brk2\n";
@@ -21,13 +33,11 @@ int main(int argc, char** argv) {
     cout << "#brk3\n";
     std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(1) ;
     (*displayList)[0] = usr->getFighter();
-
     bool selectionDone=false;
     SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
-    selectShipScreen->Run2(selectionDone);
+    selectShipScreen->Run2(selectionDone,mObjManager);
     StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
     startJoinScreen->Run();
-    // cout << "#brk3\n";
     
 
     unsigned short myport, connect_to_port;
@@ -153,5 +163,6 @@ int main(int argc, char** argv) {
         }
     }
     delete usr;
+    delete mObjManager;
 	return 1;
 }

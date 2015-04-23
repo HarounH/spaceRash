@@ -15,11 +15,13 @@ SpaceObject::SpaceObject(OBJECT_TYPE _type) {
 
 }
 
+
 SpaceObject::~SpaceObject() {
 	//figure out which order to delete things in.
 	delete body;
 	delete dms;
 	delete shape;
+
 }
 
 void SpaceObject::print(bool dflag) {
@@ -103,9 +105,9 @@ void SpaceObject::init(BulletWorld* _world) {
 	return;
 }
 
-void SpaceObject::setRenderModel(ObjLoader* _myobj) {
-	m_Obj = _myobj; //now i know what to render.
-}
+// void SpaceObject::setRenderModel(ObjLoader* _myobj) {
+// 	m_Obj = _myobj; //now i know what to render.
+// }
 
 void SpaceObject::physics_init() {
 	//read the file format.

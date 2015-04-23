@@ -3,7 +3,7 @@
 /* bullets! */
 #include <btBulletDynamicsCommon.h>
 #include "helpers.hpp"
-#include "obj_Loader.hpp"
+#include "ObjManager.hpp"
 /**
 	What follows are the file paths and so on.
 */
@@ -28,8 +28,8 @@ public:
 	void 	print(bool debug_flag = false);
 	
 	/* for rendering into opengl around the centre itself. */
-	void 	render(bool debuf_flag = false);
-	void 	render_geometry();
+	void 	render(bool debuf_flag = false,ObjManager* mObjectManager=NULL);
+	void 	render_geometry(ObjManager* mObjectManager);
 	void 	render_physics(bool dflag = false);
 	void 	handleCollision(SpaceObject* other);
 	std::vector<pair<btVector3 , btVector3> > cameras; //TODO : Make it private.
@@ -50,7 +50,7 @@ public:
 	void 	makeMessage(State*& , Message*&); //generates default message, with health, weapons, positions and everything else. etc.
 	void 	setState(State&);
 	void 	getState(State&);
-	void 	setRenderModel(ObjLoader* _myobj);
+	//void 	setRenderModel(ObjLoader* _myobj);
 	/* actions that the spaceobject can do .*/
 	void fire_laser();
 	void hit_by_laser();
@@ -100,7 +100,6 @@ private:
 	btRigidBody* body;
 	BulletWorld* world;
 	/*render*/
-	ObjLoader* m_Obj;
 };
 
 #endif

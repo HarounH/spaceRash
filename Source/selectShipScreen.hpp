@@ -109,6 +109,6 @@ public:
 	void initMapTable(); //-H wip. need to add event handlers, and test.
 	void initButtonTable();
 	void initHugeBox();
-	void Run2(bool&); // -H wip.
+	void Run2(bool&,ObjManager*); // -H wip.
 };
 #endif

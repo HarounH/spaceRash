@@ -46,4 +46,5 @@ void SpaceObject::setPosition(btVector3 vec) {
 	body->setCenterOfMassTransform(trans);
 	body->activate(actstate);
 }
+
 #endif

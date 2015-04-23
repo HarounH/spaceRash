@@ -54,12 +54,9 @@ struct texcoord{
 
 class ObjLoader{
 	std::string name;
-public:
-	SpaceObject* fighter;
 	std::vector<coordinate*> vertices; 
 	std::vector<face*> faces;
 	std::vector<coordinate* > normals;
-	//std::vector<materials*> materials;
 	std::unordered_map<std::string,material*> materials;
 	std::vector<texcoord*> textureCoordinates;
 	std::vector<sf::Image*> sourceImages;
@@ -68,13 +65,8 @@ public:
 	bool loadTexture(const char* filename,sf::Texture* &);
 	int ID;
 	void clean();
-
+public:
 	sf::Texture* getTexture(){
-		// if(faces[0]->mat->texture){
-		// 	cout<<"NULL nahi hai\n";
-		// }else{
-		// 	cout<<"NULL hai\n";
-		// }
 		return faces[0]->mat->texture;		
 	}
 	ObjLoader(std::string Name);
@@ -83,7 +75,7 @@ public:
 	};
 	int LoadObjectFile(const char* filename);
 	int LoadMaterialsFile(const char* filename);
-	int returnID();
+	int getID();
 	void render();
 	void print(bool debug_mode=false);
 };

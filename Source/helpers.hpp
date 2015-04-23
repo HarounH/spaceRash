@@ -43,7 +43,7 @@ const std::string MUSIC_RSC_DIR = "Resource/Music/";
 const std::string SW_MUSIC = "SW";
 const std::string HEALTH_FNAME  = "health";
 const std::string AMMO_FNAME  = "ammo";
-const std::string TIEF_FNAME  = "tiefighter";
+const std::string TIEF_FNAME  = "tie";
 const std::string ASTEROID_FNAME  = "asteroid";
 const std::string XWING_FNAME  = "xwing";
 const std::string MF_FNAME  = "mf";
@@ -56,6 +56,7 @@ const std::string OBJ_EXTENSION = ".obj";
 const std::string PHY_EXTENSION = ".lhc";
 const std::string MUSIC_EXTENSION = ".ogg";
 const std::string WORLD_PHY_FNAME = "Resource/myWorld.avril";
+
 /* This file contains parsers for user settings. */
 const std::string SETTINGS_FILE = "thereisaspoon.tang";
 

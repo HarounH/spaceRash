@@ -63,7 +63,6 @@ void material::print(bool x) {
 texcoord::texcoord(float a,float b){
         u=a;
         v=1-b;
-        //-----------POSSIBLE SOURCE OF ERROR-----------------//
 }
 
 int ObjLoader::LoadMaterialsFile(const char* filename){
@@ -315,14 +314,8 @@ int ObjLoader::LoadObjectFile(const char* filename){
 }
 
 void ObjLoader::render(){
-    /*for (int i=0;i<faces.size();i++){
-        cout<<i+1<<" "<<vertices[faces[i]->vertices[0]]->x<<" "vertices[faces[i]->vertices[0]]->y<<" "<<vertices[faces[i]->vertices[0]]->z<<"\n";
-        cout<<i+1<<" "<<vertices[faces[i]->vertices[1]]->x<<" "vertices[faces[i]->vertices[1]]->y<<" "<<vertices[faces[i]->vertices[1]]->z<<"\n";
-        cout<<i+1<<" "<<vertices[faces[i]->vertices[2]]->x<<" "vertices[faces[i]->vertices[2]]->y<<" "<<vertices[faces[i]->vertices[2]]->z<<"\n";
-    }*/
-    //--------------E TOH NA HO RAHA----------------//
-    // ID = glGenLists(1);
-    // glNewList(ID,GL_COMPILE);
+    //-----------------------------WANNA TRY glNewList?------------------------------------//
+ //glNewList(ID,GL_COMPILE);
     material* mat = NULL;
     for(int i=0;i<faces.size();i++){
        glPushMatrix();
@@ -405,7 +398,7 @@ void ObjLoader::render(){
     
     }
     sf::Texture::bind(NULL);
-    
+    //glEndList();
 
 }
 
@@ -428,20 +421,24 @@ void ObjLoader::clean(){
     for(int i=0;i<sourceImages.size();i++){
         delete sourceImages[i];
     }
+    glDeleteLists(ID,1);
     materials.clear();
     faces.clear();
     normals.clear();
     vertices.clear();
 }
 
-int ObjLoader::returnID(){
+int ObjLoader::getID(){
     return ID;
 }
-bool ObjLoader::loadTexture (const char* filename,sf::Texture* &tex){
+bool ObjLoader::loadTexture (const char* fname,sf::Texture* &tex){
     //----------ERROR POSSIBLE HERE---------------------//
     
     sf::Image* img = new sf::Image;
-    if(!img->loadFromFile(filename)){
+    
+    std::string filename = OBJ_RSC_DIR+fname;
+    
+    if(!img->loadFromFile(filename.c_str())){
         cout << " Couldn't Load Image \n";
         return false;
     }

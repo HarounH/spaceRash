@@ -7,6 +7,7 @@
 #include "skybox.hpp"
 #include "selectShipScreen.hpp"
 #include "startJoinScreen.hpp"
+#include "ObjManager.hpp"
 typedef boost::bimap< int, SpaceObject* > spaceObjWeed;
 typedef spaceObjWeed::value_type spaceObjWeedNormal;
 typedef spaceObjWeed::left_value_type spaceObjWeedLeft; 
@@ -35,6 +36,7 @@ private:
 	OBJECT_TYPE fighterType;
 	HUD hud;
 	SpaceObject* fighter;
+	ObjManager* allObjects;
 
 	/* network integration */
 	State* myState;
@@ -57,7 +59,7 @@ private:
 	UserSettings* settings;
 	int camera_idx;
 public:
-	Player();
+	Player(ObjManager*);
 	~Player();
 
 	bool started() { return didStart; }

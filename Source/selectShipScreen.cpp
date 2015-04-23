@@ -430,7 +430,7 @@ void SelectShipScreen::init2() {
 }
 
 
-void SelectShipScreen::Run2(bool& selectionDone) {
+void SelectShipScreen::Run2(bool& selectionDone,ObjManager* mObjManager) {
 	//ASSERT : Window already running.
 	sf::Window wnd(sf::VideoMode(usrptr->getSettings()->defaultScreenSizeX , usrptr->getSettings()->defaultScreenSizeY), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
 	sfg::SFGUI sfgui;
@@ -483,7 +483,7 @@ void SelectShipScreen::Run2(bool& selectionDone) {
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		(*shipDisplayList)[currentShip]->render(true);
+		(*shipDisplayList)[currentShip]->render(true,mObjManager);
 
 
 		desktop.Update(0.0f);

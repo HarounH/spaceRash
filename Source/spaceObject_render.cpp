@@ -3,7 +3,7 @@
 
 #include "spaceObject.hpp"
 /** file with functions for rendering things. */
-void SpaceObject::render(bool dflag) {
+void SpaceObject::render(bool dflag,ObjManager* mObjManager) {
 	
     btTransform trans_com;
     body->getMotionState()->getWorldTransform(trans_com);
@@ -14,7 +14,7 @@ void SpaceObject::render(bool dflag) {
     if (dflag) {
 		render_physics(true);
 	}
-	render_geometry();
+	render_geometry(mObjManager);
     wasHit = false;
     glPopMatrix();
     /* rendering lasorz. */
@@ -26,11 +26,12 @@ void SpaceObject::render(bool dflag) {
 
 }
 
-void SpaceObject::render_geometry() {
+void SpaceObject::render_geometry(ObjManager* mObjManager) {
     if ( wasHit ) {
         //Do something.
     }
-    
+    //----------SomeOpenGL magic required here -------------//
+    mObjManager->render(obj_type);
     return;
 }
 

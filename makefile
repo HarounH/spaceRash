@@ -104,7 +104,7 @@ LIBS=-lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lboost_sy
 INCS=-I /usr/local/Cellar/bullet/2.82/include/bullet/
 FRAMEWORKS=-framework OpenGL -framework GLUT
 
-$(EXE)$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)selectShipScreen.o $(OBJ)startJoinScreen.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o
+$(EXE)$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)selectShipScreen.o $(OBJ)startJoinScreen.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o $(OBJ)ObjManager.o $(OBJ)Obj_Loader.o
 	$(Compiler) $^ $(LIBS) $(FRAMEWORKS) -o $@ 
 
 all:
@@ -181,6 +181,13 @@ $(OBJ)weapon.o: $(SRC)weapon.cpp
 $(OBJ)message.o: $(SRC)message.cpp
 	$(Compiler) -c $^ $(INCS)
 	mv message.o $@
+
+$(OBJ)ObjManager.o: $(SRC)ObjManager.cpp
+	$(Compiler) -c $^ $(INCS)
+	mv ObjManager.o $@
+$(OBJ)Obj_Loader.o: $(SRC)Obj_Loader.cpp
+	$(Compiler) -c $^ $(INCS)
+	mv Obj_Loader.o $@
 
 execute: $(EXE)$(EXEC)
 	./$< $1 $2 $3

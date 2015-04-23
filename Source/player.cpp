@@ -2,7 +2,7 @@
 #define PLAYER_CPP
 #include "player.hpp"
 /*--------TODO: DECIDE ON THE SKY BOX DIMENSIONS---------------*/
-Player::Player() {
+Player::Player(ObjManager* mObjManager) {
 	//network = new NetworkManager();
 
 	nextSpaceObjId = 0;
@@ -21,6 +21,7 @@ Player::Player() {
 	numPlayers = 0;
 	numAIs = 0;
 	hasSetInitialPosition = false;
+	allObjects = mObjManager;
 }
 
 Player::~Player() {
@@ -28,6 +29,7 @@ Player::~Player() {
 	delete music;
 	delete network;
 	delete skybox;
+	allObjects = NULL;
 	//delete bulletWorld; //TODO
 }
 void Player::init_bulletWorld() {
@@ -89,13 +91,13 @@ void Player::render_state(double dt) {
 		
 
 		skybox->renderBox(skybox_size);
-		fighter->render(true);
+		fighter->render(true,allObjects);
 		//render all spaceobjects.
 		for ( spaceObjWeed::const_iterator obj_iterator = EveryOne.begin()
 			; obj_iterator != EveryOne.end()
 			; ++obj_iterator) {
 			//--------------------------------
-			obj_iterator->right->render(true);
+			obj_iterator->right->render(true,allObjects);
 		}
 	glPopMatrix();
 }
