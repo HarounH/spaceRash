@@ -17,6 +17,9 @@
 struct coordinate{
 	float x,y,z;
 	coordinate(float ,float,float);
+	void print() {
+		cout << "  coord(" << x << " , " << y << " , " << z << ")\n";
+	}
 };
 
 
@@ -34,38 +37,44 @@ struct face{
         std::vector<int> vertices;   //indexes for every vertex, which makes the face, starting from 1
         std::vector<int> texcoord;        //indexes for every texture coordinate that is in the face, starting from 1 
         int normals;
-        material* mat;                //the index for the material, which is used by the face
+        material* mat;  
+        face(){};              //the index for the material, which is used by the face
         face(std::vector<int>& v,std::vector<int>& tex,int n,material* m,bool f);   
         ~face();
         bool four;
+        void print(bool);
 };
 struct texcoord{
 	float u,v;
 	texcoord(float a,float b);
+	void print() {
+		cout << "  texel(" << u << " , " << v << ")\n";
+	}
 };
 
 class ObjLoader{
 	std::string name;
+public:
 	SpaceObject* fighter;
 	std::vector<coordinate*> vertices; 
 	std::vector<face*> faces;
 	std::vector<coordinate* > normals;
-	std::vector<unsigned int> texture;
 	//std::vector<materials*> materials;
 	std::unordered_map<std::string,material*> materials;
 	std::vector<texcoord*> textureCoordinates;
 	std::vector<sf::Image*> sourceImages;
 	bool ismaterial,isnormals,istexture; 
+
 	bool loadTexture(const char* filename,sf::Texture* &);
 	int ID;
 	void clean();
-public:
+
 	sf::Texture* getTexture(){
-		if(faces[0]->mat->texture){
-			cout<<"NULL nahi hai\n";
-		}else{
-			cout<<"NULL hai\n";
-		}
+		// if(faces[0]->mat->texture){
+		// 	cout<<"NULL nahi hai\n";
+		// }else{
+		// 	cout<<"NULL hai\n";
+		// }
 		return faces[0]->mat->texture;		
 	}
 	ObjLoader(std::string Name);

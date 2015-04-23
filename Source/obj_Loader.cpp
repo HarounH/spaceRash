@@ -62,7 +62,7 @@ void material::print(bool x) {
    //nothing to explain here
 texcoord::texcoord(float a,float b){
         u=a;
-        v=b;
+        v=1-b;
         //-----------POSSIBLE SOURCE OF ERROR-----------------//
 }
 
@@ -168,11 +168,10 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
     //     it->second->print(true);
     //     cout << "\n";
     // }
-    delete texture;
     return 0;
 }
 
-int ObjLoader::LoadObjectFile(const char* filename){ //works.
+int ObjLoader::LoadObjectFile(const char* filename){
     std::ifstream in(filename);
     if(!in.is_open()){
             std::cout<<" Could not open OBJ file "<<filename<<"\n";
@@ -186,9 +185,9 @@ int ObjLoader::LoadObjectFile(const char* filename){ //works.
             coord.push_back(new std::string(buff));
     }
     in.close();
-    for(int i=0;i<coord.size();i++){
-        cout<<(*coord[i])<<"\n";
-    }
+    // for(int i=0;i<coord.size();i++){
+    //     cout<<(*coord[i])<<"\n";
+    // }
     for(int i=0;i<coord.size();i++){
             if((*coord[i])[0]=='#'){
                     continue;
@@ -303,13 +302,13 @@ int ObjLoader::LoadObjectFile(const char* filename){ //works.
     for(int i=0;i<coord.size();i++){
             delete coord[i];
     }
-    for(int i=0;i<faces.size();i++){
-        if(faces[i]->mat->texture){
-            cout<<"Exists\n";
-        }else{
-            cout<<"Existantial Crisis\n";
-        }
-    }
+    // for(int i=0;i<faces.size();i++){
+    //     if(faces[i]->mat->texture){
+    //         cout<<"Exists\n";
+    //     }else{
+    //         cout<<"Existantial Crisis\n";
+    //     }
+    // }
     return 0;
     
 
@@ -324,7 +323,6 @@ void ObjLoader::render(){
     //--------------E TOH NA HO RAHA----------------//
     // ID = glGenLists(1);
     // glNewList(ID,GL_COMPILE);
-    
     material* mat = NULL;
     for(int i=0;i<faces.size();i++){
         glPushMatrix();
@@ -332,27 +330,29 @@ void ObjLoader::render(){
             float diffuse [] = {faces[i]->mat->diff[0],faces[i]->mat->diff[1],faces[i]->mat->diff[2],1.0};
             float ambient [] = {faces[i]->mat->amb[0],faces[i]->mat->amb[1],faces[i]->mat->amb[2],1.0};
             float specular [] = {faces[i]->mat->spec[0],faces[i]->mat->spec[1],faces[i]->mat->spec[2],1.0};
-            cout<<diffuse[0]<<" "<<diffuse[1]<<" "<<diffuse[2]<<"    "<<ambient[0]<<" "<<ambient[1]<<" "<<ambient[2]<<"     "<<specular[0]<<" "<<specular[1]<<" "<<specular[2]<<"\n";
+            //cout<<diffuse[0]<<" "<<diffuse[1]<<" "<<diffuse[2]<<"    "<<ambient[0]<<" "<<ambient[1]<<" "<<ambient[2]<<"     "<<specular[0]<<" "<<specular[1]<<" "<<specular[2]<<"\n";
             glMaterialfv(GL_FRONT,GL_DIFFUSE,diffuse);
             glMaterialfv(GL_FRONT,GL_AMBIENT,ambient);
             glMaterialfv(GL_FRONT,GL_SPECULAR,specular);
             mat = faces[i]->mat;
             if(mat->texture!=NULL){
-                cout << "binding texture hi\n";
-                sf::Texture::bind(faces[i]->mat->texture);
+                //cout << "binding texture hi\n";
                 glEnable(GL_TEXTURE_2D);
-               
+                sf::Texture::bind(NULL);
+                sf::Texture::bind(faces[i]->mat->texture);
             }
             else{
+                mat = NULL;
+                sf::Texture::bind(NULL);
                 glDisable(GL_TEXTURE_2D);
             }
            
         }
         if(faces[i]->four){
             
-            glBegin(GL_QUADS);
+            glBegin(GL_POLYGON);
                 if(isnormals){
-                    glNormal3f(-1*normals[faces[i]->normals]->x,-1*normals[faces[i]->normals]->y,-1*normals[faces[i]->normals]->z);
+                    glNormal3f(normals[faces[i]->normals]->x,normals[faces[i]->normals]->y,normals[faces[i]->normals]->z);
                 }
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL)  {//if there are textures
                     glTexCoord2f(textureCoordinates[faces[i]->texcoord[0]]->u,textureCoordinates[faces[i]->texcoord[0]]->v);      //set the texture coorinate
@@ -376,10 +376,11 @@ void ObjLoader::render(){
                 
             glEnd();
 
-        }else{
-            glBegin(GL_TRIANGLES);
+        }
+        else {
+            glBegin(GL_POLYGON);
                 if(isnormals){
-                    glNormal3f(-1*normals[faces[i]->normals]->x,-1*normals[faces[i]->normals]->y,-1*normals[faces[i]->normals]->z);
+                    glNormal3f(normals[faces[i]->normals]->x,normals[faces[i]->normals]->y,normals[faces[i]->normals]->z);
                 }
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL)  {//if there are textures 
                     glTexCoord2f(textureCoordinates[faces[i]->texcoord[0]]->u,textureCoordinates[faces[i]->texcoord[0]]->v);      //set the texture coorinate
@@ -398,9 +399,10 @@ void ObjLoader::render(){
                 
             glEnd();
         }
-    sf::Texture::bind(NULL);
-    glPopMatrix();
+        glPopMatrix();
     }
+    sf::Texture::bind(NULL);
+
 }
 
 void ObjLoader::clean(){
@@ -462,17 +464,19 @@ void ObjLoader::print(bool debugm) {
     cout << "name=" << name << "\n";
     cout << "\tID=" << ID << "\n";
     cout << "nvertices=" << vertices.size() << "\n";
-        // cout << "\tvertices are @" << "\n";
-        // for(int i=0; i<vertices.size(); ++i) {
-        //     if(!vertices[i]) {
-        //         cout << "NULL VERTEX :(";
-        //     } else {
-        //         cout << vertices[i]->x << "," << vertices[i]->y << "," << vertices[i]->z << ")\n";
-        //     }
-        // }
+        cout << "\tvertices are @" << "\n";
+        for(int i=1; i<vertices.size(); ++i) {
+            if(!vertices[i]) {
+                cout << "NULL VERTEX :'(\n";
+            } else {
+                cout << "vertex-"<<i<<"(" <<vertices[i]->x << "," << vertices[i]->y << "," << vertices[i]->z << ")\n";
+            }
+        }
     cout << "nfaces=" << faces.size() << "\n";
+        for(int i=0; i<faces.size(); ++i) {
+            faces[i]->print(debugm);
+        }
     cout << "nNormals=" << normals.size() << "\n";
-    cout << "ntexture=" << texture.size() << "\n";
     cout << "nmaterials=" << materials.size() << "\n";
     for(auto it = materials.begin(); it!=materials.end(); ++it) {
         cout << "name=" << it->first << "\n";
@@ -485,4 +489,18 @@ void ObjLoader::print(bool debugm) {
     }
 }
 
+void face::print(bool d) {
+    if (d) {
+        cout << "n(V,T,N,4)=(" << numV << "," << numT << "," << numN << "," << four << ")\n";
+        cout << "\tvertex-idx\n\t";
+        for(int i=0; i<vertices.size(); ++i) {
+            cout << "  " << vertices[i] ;
+        }
+        cout << "\n\ttexcoords\n\t";
+        for(int i=0;i<texcoord.size(); ++i) {
+            cout << "  " << texcoord[i] ;   
+        }
+        cout << "\n";
+    }
+}
 #endif
