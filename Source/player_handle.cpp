@@ -132,26 +132,12 @@ void Player::handleMessage(Message msg, int network_int) {
 		{
 			obj->setState(msg.ship);			
 		}
-
-
-	}
-
-	if (msg.msgType & LASERDATA) {
-		SpaceObject* obj = which_spaceObject(network_int);
-		if(obj != nullptr)
-		{
-			obj->setActiveWeapon(msg.wpnType);
-			btVector3 laserFrom, laserTo;
-			msg.getData(laserFrom, laserTo);
-			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
-		}
 		else {
 			long long client_id = network->get_client_id(msg.newConnectorIP, msg.newConnectorPort);
 			if(client_id == -1) {
 				//if not found then add to list of clients
 				int nextClientId = network->addClient(msg.newConnectorIP, msg.newConnectorPort);
 				//add this spaceObject to list of objects
-				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				newObject->init(bulletWorld);
 				btTransform t;
@@ -183,6 +169,19 @@ void Player::handleMessage(Message msg, int network_int) {
 				sendMessage();
 			}
 		}
+
+	}
+
+	if (msg.msgType & LASERDATA) {
+		SpaceObject* obj = which_spaceObject(network_int);
+		if(obj != nullptr)
+		{
+			obj->setActiveWeapon(msg.wpnType);
+			btVector3 laserFrom, laserTo;
+			msg.getData(laserFrom, laserTo);
+			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
+		}
+		
 	}
 }
 

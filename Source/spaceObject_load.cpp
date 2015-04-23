@@ -103,6 +103,10 @@ void SpaceObject::init(BulletWorld* _world) {
 	return;
 }
 
+void SpaceObject::setRenderModel(ObjLoader* _myobj) {
+	m_Obj = _myobj; //now i know what to render.
+}
+
 void SpaceObject::physics_init() {
 	//read the file format.
 	readPhysicsFile(); //reads into children and childTransform
@@ -139,6 +143,10 @@ void SpaceObject::createCompoundShape() {
     world->dynamicsWorld->addRigidBody(body);
 }
 void SpaceObject::render_init() {
+	if ( obj_type==ASTEROID || obj_type==ENDPOINT || obj_type==SKYRISE_FAT || obj_type==SKYRISE_TALL ) {
+		
+	}
+
 	return;//TODO
 }
 

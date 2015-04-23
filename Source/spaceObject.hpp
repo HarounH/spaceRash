@@ -3,7 +3,7 @@
 /* bullets! */
 #include <btBulletDynamicsCommon.h>
 #include "helpers.hpp"
-
+#include "obj_Loader.hpp"
 /**
 	What follows are the file paths and so on.
 */
@@ -50,7 +50,7 @@ public:
 	void 	makeMessage(State*& , Message*&); //generates default message, with health, weapons, positions and everything else. etc.
 	void 	setState(State&);
 	void 	getState(State&);
-
+	void 	setRenderModel(ObjLoader* _myobj);
 	/* actions that the spaceobject can do .*/
 	void fire_laser();
 	void hit_by_laser();
@@ -100,7 +100,7 @@ private:
 	btRigidBody* body;
 	BulletWorld* world;
 	/*render*/
-
+	ObjLoader* m_Obj;
 };
 
 #endif
