@@ -65,6 +65,7 @@ public:
 	bool beginGame() { return startGame; }
 
 	int numberOfPlayers() { return numPlayers; }
+	NetworkManager* getNetwork() { return network; } 
 
 	SpaceObject* which_spaceObject(int network_int);
 

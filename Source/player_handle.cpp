@@ -25,6 +25,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				float temp[16];
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
+				cout << "1. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				sendMessage();
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
@@ -71,7 +72,10 @@ void Player::handleMessage(Message msg, int network_int) {
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
+
 				sendMessage();
+				cout << network->numberOfClients() << "\n";
+				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 
 				*(myMessage) = msg;
 				sendMessage();
@@ -91,9 +95,9 @@ void Player::handleMessage(Message msg, int network_int) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(client_id, nextPlayerId);
 				}
-
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -116,6 +120,8 @@ void Player::handleMessage(Message msg, int network_int) {
 			fighter->getRigidBody()->setWorldTransform(t);
 			bulletWorld->dynamicsWorld->stepSimulation(0.00001f);
 			hasSetInitialPosition = true;
+			cout << "4. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
+
 		}
 	}
 	
@@ -126,6 +132,8 @@ void Player::handleMessage(Message msg, int network_int) {
 		{
 			obj->setState(msg.ship);			
 		}
+
+
 	}
 
 	if (msg.msgType & LASERDATA) {
@@ -136,6 +144,44 @@ void Player::handleMessage(Message msg, int network_int) {
 			btVector3 laserFrom, laserTo;
 			msg.getData(laserFrom, laserTo);
 			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
+		}
+		else {
+			long long client_id = network->get_client_id(msg.newConnectorIP, msg.newConnectorPort);
+			if(client_id == -1) {
+				//if not found then add to list of clients
+				int nextClientId = network->addClient(msg.newConnectorIP, msg.newConnectorPort);
+				//add this spaceObject to list of objects
+				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
+				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
+				newObject->init(bulletWorld);
+				btTransform t;
+				float temp[16];
+				for(int i=0; i<16; ++i) {
+					temp[i] = msg.ship.transform[i];
+				}
+				t.setFromOpenGLMatrix(temp);
+
+				if( add_object(newObject) ) {
+					int nextPlayerId = getID(newObject);
+					addtoNtoP(nextClientId, nextPlayerId);
+				}
+
+				newObject->getRigidBody()->setWorldTransform(t);
+				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+
+				//send this message to everyone else
+				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
+				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+				mytrans.getOpenGLMatrix(temp);
+				(myMessage->ship).transform.assign(temp , temp + 15);
+
+				sendMessage();
+				cout << network->numberOfClients() << "\n";
+				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
+
+				*(myMessage) = msg;
+				sendMessage();
+			}
 		}
 	}
 }

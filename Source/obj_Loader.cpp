@@ -325,7 +325,7 @@ void ObjLoader::render(){
     // glNewList(ID,GL_COMPILE);
     material* mat = NULL;
     for(int i=0;i<faces.size();i++){
-        glPushMatrix();
+       glPushMatrix();
         if(mat != faces[i]->mat && ismaterial){
             float diffuse [] = {faces[i]->mat->diff[0],faces[i]->mat->diff[1],faces[i]->mat->diff[2],1.0};
             float ambient [] = {faces[i]->mat->amb[0],faces[i]->mat->amb[1],faces[i]->mat->amb[2],1.0};
@@ -379,7 +379,8 @@ void ObjLoader::render(){
         }
         else {
             glBegin(GL_POLYGON);
-                if(isnormals){
+            
+               if(isnormals){
                     glNormal3f(normals[faces[i]->normals]->x,normals[faces[i]->normals]->y,normals[faces[i]->normals]->z);
                 }
                 if(faces[i]->texcoord.size()!=0 && faces[i]->mat!=NULL)  {//if there are textures 
@@ -399,9 +400,12 @@ void ObjLoader::render(){
                 
             glEnd();
         }
+        
         glPopMatrix();
+    
     }
     sf::Texture::bind(NULL);
+    
 
 }
 

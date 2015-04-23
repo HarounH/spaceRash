@@ -38,6 +38,8 @@ void Player::connectToNetwork(string IP, unsigned short server_port, string loca
 void Player::setGeneralData() {
 	fighter->getState(myMessage->ship);
 	myMessage->msgType = (int) GENDATA;
+	myMessage->newConnectorIP = network->getMyIP();
+	myMessage->newConnectorPort = network->getMyPort();
 	sendMessage();
 }
 

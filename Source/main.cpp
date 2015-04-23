@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         window.display();
         if ( ctr%TICKS==0 ) {
             usr->setGeneralData();
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < player->getNetwork()->numberOfClients(); i++)
                 usr->receiveMessage();
         } 
         ctr = (ctr+1)%TICKS ;
