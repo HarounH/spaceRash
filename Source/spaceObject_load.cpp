@@ -52,13 +52,13 @@ void SpaceObject::init(BulletWorld* _world) {
 			objpath += TIEF_FNAME + OBJ_EXTENSION;
 			phypath += TIEF_FNAME + PHY_EXTENSION;
 			weapons.resize(1);
-			weapons[0] = new Weapon( MEDIUM_LASER , btVector3(200,200,0));
+			weapons[0] = new Weapon( MEDIUM_LASER , btVector3(0,200,0));
 			break;
 		} case XWING : {
 			objpath += XWING_FNAME + OBJ_EXTENSION;
 			phypath += XWING_FNAME + PHY_EXTENSION;
 			weapons.resize(1);
-			weapons[0] = new Weapon( MEDIUM_LASER , btVector3(200,200,0));
+			weapons[0] = new Weapon( MEDIUM_LASER , btVector3(200,0,0));
 			break;
 		} case MF : {
 			objpath += MF_FNAME + OBJ_EXTENSION;

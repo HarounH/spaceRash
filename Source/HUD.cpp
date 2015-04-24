@@ -35,9 +35,9 @@ void HUD::init(Player* _usrptr, sf::RenderWindow& wnd) {
 	ep.setFillColor(sf::Color::Green);
 
 	health.setFillColor(sf::Color::Red);
-	health.setSize(sf::Vector2f(20.0f,2.0f));
-	health.setPosition(wnd.getSize().x/2 - 25 , wnd.getSize().y/2 + 160);
-
+	health.setSize(sf::Vector2f(wnd.getSize().x,2.0f));
+	health.setPosition(0.0 , wnd.getSize().y/2 + 160);
+	healthBarSize = wnd.getSize().x;
 
 }
 
@@ -46,18 +46,28 @@ void HUD::resize(sf::RenderWindow& wnd, sf::Event& event) {
 	cout << "setting to=" << event.size.width/2 << "," << event.size.height/2 << "\n";
 	//crosshair.setPosition());
 	map.setPosition(0.99*event.size.width ,0.05*event.size.height );
-	health.setPosition(event.size.width/2 , event.size.height/2);
+	health.setPosition(-event.size.width , event.size.height/2 +160);
+	healthBarSize = event.size.width;
 
 }
 
 void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	wnd.pushGLStates();
 	wnd.draw(crosshair);
-	health.setSize(sf::Vector2f((float)refer->getHealth()/10.0f,2.0f));
+	//cout<<"SOMETHING FISHY HERE: "<<refer->getHealth()<<"\n";
+	float offset = (1000-refer->getHealth())/1000.0;
+	health.setPosition(sf::Vector2f(offset/2.0*healthBarSize,health.getPosition().y));
+	//cout<<"Lost Health"<<offset/2.0*healthBarSize<<"\n";
+	health.setSize(sf::Vector2f((float)refer->getHealth()/1000.0*healthBarSize,2.0f));
+	//cout<<"Remaining Health"<<(float)refer->getHealth()/1000.0*healthBarSize;
 
-	if (refer->getHealth() > 50) {
+	if (refer->getHealth() > 500) {
 		health.setFillColor(sf::Color::Green);
-	} else if (refer->getHealth() < 50 ) {
+	} 
+	else if (refer->getHealth() <= 500 && refer->getHealth()>=100) {
+		health.setFillColor(sf::Color::Yellow);
+	}
+	else{
 		health.setFillColor(sf::Color::Red);
 	}
 

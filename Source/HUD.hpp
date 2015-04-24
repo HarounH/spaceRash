@@ -18,7 +18,7 @@ struct HUD {
 	sf::CircleShape map;
 	sf::CircleShape ep; //endpoint marker.
 	sf::RectangleShape health;
-
+	int healthBarSize;
 	void init(Player* _usr,sf::RenderWindow& wnd);
 	void resize(sf::RenderWindow& wnd, sf::Event& event);
 	void draw(SpaceObject* s, sf::RenderWindow& window);

@@ -25,13 +25,14 @@ void SpaceObject::makeMessage(State*& state,  Message*& msg) {
 void SpaceObject::handleCollision(SpaceObject* other) {
 	wasHit = true;
 	//---------TODO Need to scale damage down---------//
-	btScalar otherMass = other->getRigidBody()->getInvMass();
-	if(otherMass==0){
-		health/=3;
-	}else{
-		int damage = other->getRigidBody()->getLinearVelocity().length2()* body->getLinearVelocity().length2() * body->getInvMass() / otherMass;
-		health-=damage;
-	}
+	health -=50;
+	// btScalar otherMass = other->getRigidBody()->getInvMass();
+	// if(otherMass==0){
+	// 	health/=3;
+	// }else{
+	// 	int damage = other->getRigidBody()->getLinearVelocity().length2()* body->getLinearVelocity().length2() * body->getInvMass() / otherMass;
+	// 	health-=damage;
+	// }
 	//cout << "I'm at health=" << health << "\n";
 	return;
 }
@@ -158,7 +159,7 @@ void SpaceObject::roll_right() {
 void SpaceObject::fire_laser() {
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
-	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-20));
+	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-5));
 	std::cout << body->getOrientation().getX() << "," << body->getOrientation().getY() << "," << body->getOrientation().getZ() << "," << body->getOrientation().getW() << "\n";
 	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-500));
 		
