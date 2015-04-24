@@ -158,9 +158,9 @@ void SpaceObject::roll_right() {
 void SpaceObject::fire_laser() {
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
-	btVector3 from = trans.getOrigin();
+	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-20));
 	std::cout << body->getOrientation().getX() << "," << body->getOrientation().getY() << "," << body->getOrientation().getZ() << "," << body->getOrientation().getW() << "\n";
-	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-20));
+	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-500));
 		
 	//Perform ray test.
 	btCollisionWorld::ClosestRayResultCallback rayCallback( from, to );
