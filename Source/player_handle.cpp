@@ -23,6 +23,9 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				//send this message to everyone else
+				for(int i = 1; i < 4; i++)
+					sendMessage(string("connectDummy"));
+
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				sendMessageToClient(network_int);
 
@@ -109,6 +112,8 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNtoP(nextClientId, nextPlayerId);
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
+				for(int i = 1; i < 4; i++)
+					sendMessage(string("connectDummy"));
 
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
@@ -180,6 +185,9 @@ void Player::handleMessage(Message msg, int network_int) {
 					cout << "added.\n";
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
+				for(int i = 1; i < 4; i++)
+					sendMessage(string("connectDummy"));
+
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
@@ -255,7 +263,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	}
 
 	if((msg.msgType & CONFIRMDATA) && network_int != -1)
-		confirmed[network_int - 1] = false;
+		confirmed[network_int - 1] = true;
 	
 	if (msg.msgType & GENDATA) {
 		//get the spaceObject and set its state?
