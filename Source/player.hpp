@@ -44,7 +44,7 @@ private:
 	NametoPType NameToP;
 	NetworkManager* network;
 	Message* myMessage;
-	std::vector<bool> confirmed;
+	std::vector< pair<string, short> > iplist;
 	/* Rendering geometry */
 	//sf::Window* wnd; //Window that things run on. <-- deprecated.
 	/* Physics geometry. */

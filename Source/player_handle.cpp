@@ -15,6 +15,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				int nextClientId = network->addClient(msg.newConnectorIP, msg.newConnectorPort);
 				//add this spaceObject to list of objects
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
+				iplist.push_back(make_pair(msg.newConnectorIP, msg.newConnectorPort));
 				newObject->init(bulletWorld);
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
@@ -23,14 +24,8 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				//send this message to everyone else
-				for(int i = 1; i < 4; i++)
-				{
-					string t = "connectDummy";
-					sendMessage(t);
-				}
-
-				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(nextClientId);
+				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+				// sendMessageToClient(nextClientId);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -38,25 +33,9 @@ void Player::handleMessage(Message msg, int network_int) {
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
 				cout << "1. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				bool flag = false;
-				while(!flag)
-				{
-					flag = true;
-					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = false;
-							break;
-						}
-					}
-					usleep(40000);
-				}
+				
+				sendMessage();
+
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
 				myMessage->playerName = settings->name;
@@ -67,27 +46,13 @@ void Player::handleMessage(Message msg, int network_int) {
 				yourTrans.setOrigin(np);
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				flag = false;
-				while(!flag)
+				for(auto it = iplist.begin(); it != iplist.end(); it++)
 				{
-					flag = true;
+					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
 					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = false;
-							break;
-						}
-					}
-					usleep(40000);
 				}
+
 				numPlayers--;
-				deferSetConnect = true;
 			}
 		}
 	}
@@ -102,6 +67,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				//add this spaceObject to list of objects
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				newObject->init(bulletWorld);
+				iplist.push_back(make_pair(msg.newConnectorIP, msg.newConnectorPort));
 				btTransform t;
 				float temp[16];
 				for(int i=0; i<16; ++i) {
@@ -115,12 +81,6 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNtoP(nextClientId, nextPlayerId);
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
-				for(int i = 1; i < 4; i++)
-				{
-					string t = "connectDummy";
-					sendMessage(t);
-				}
-
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
@@ -132,47 +92,15 @@ void Player::handleMessage(Message msg, int network_int) {
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				bool flag = false;
-				while(!flag)
-				{
-					flag = true;
-					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = false;
-							break;
-						}
-					}
-					usleep(40000);
-				}
+				
+				sendMessage();
+
 				cout << network->numberOfClients() << "\n";
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				*(myMessage) = msg;
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				flag = false;
-				while(!flag)
-				{
-					flag = true;
-					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = false;
-							break;
-						}
-					}
-					usleep(40000);
-				}
+				
+				sendMessage();
+
 			}
 			else if(which_spaceObject(client_id) == nullptr) {
 
@@ -191,11 +119,6 @@ void Player::handleMessage(Message msg, int network_int) {
 					cout << "added.\n";
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
-				for(int i = 1; i < 4; i++)
-				{
-					string t = "connectDummy";
-					sendMessage(t);
-				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
@@ -208,45 +131,13 @@ void Player::handleMessage(Message msg, int network_int) {
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				bool flag = false;
-				while(!flag)
-				{
-					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = true;
-							break;
-						}
-					}
-					usleep(40000);
-				}
+				
+				sendMessage();
 
 				*(myMessage) = msg;
-				confirmed.resize(network->numberOfClients(), false);
-				for(int i = 0; i < (int)confirmed.size(); i++)
-					confirmed[i] = false;
-				flag = false;
-				while(!flag)
-				{
-					flag = true;
-					sendMessage();
-					receiveMessage();
-					for(int i = 0; i < (int)confirmed.size(); i++)
-					{
-						if(confirmed[i] == false)
-						{
-							flag = false;
-							break;
-						}
-					}
-					usleep(40000);
-				}
+				
+				sendMessage();
+
 			}
 			else
 			{
@@ -270,9 +161,6 @@ void Player::handleMessage(Message msg, int network_int) {
 			sendMessageToClient(network_int);
 		}
 	}
-
-	if((msg.msgType & CONFIRMDATA) && network_int != -1)
-		confirmed[network_int - 1] = true;
 	
 	if (msg.msgType & GENDATA) {
 		//get the spaceObject and set its state?
