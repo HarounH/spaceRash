@@ -46,9 +46,8 @@ int main(int argc, char** argv) {
     Player* usr = new Player(mObjManager);
     HUD mHud;
     // cout << "#brk1\n";
-    usr->setFighterType(XWING);
     // cout << "#brk2\n";
-    usr->init_fighter();
+    
     // cout << "#brk3\n";
     std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(2) ;
     (*displayList)[0] = new SpaceObject(XWING);
@@ -71,6 +70,9 @@ int main(int argc, char** argv) {
         tempWorld->dynamicsWorld->removeRigidBody((*displayList)[i]->getRigidBody());
     }
     delete tempWorld;
+    
+    usr->init_fighter();
+
     StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
     startJoinScreen->Run();
     

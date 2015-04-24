@@ -289,6 +289,7 @@ void SelectShipScreen::Run2(bool& selectionDone,ObjManager* mObjManager) {
 
 		selectionDone = internalSelectionDone;
 	}
+	usrptr->setFighterType(((*shipDisplayList)[currentShip]->getType()));
 
 }
 #endif
