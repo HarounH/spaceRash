@@ -24,7 +24,10 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 				//send this message to everyone else
 				for(int i = 1; i < 4; i++)
-					sendMessage(string("connectDummy"));
+				{
+					string t = "connectDummy";
+					sendMessage(t);
+				}
 
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				sendMessageToClient(network_int);
@@ -114,7 +117,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 				for(int i = 1; i < 4; i++)
 				{
-					string t = connectDummy;
+					string t = "connectDummy";
 					sendMessage(t);
 				}
 
@@ -189,7 +192,10 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				for(int i = 1; i < 4; i++)
-					sendMessage(string("connectDummy"));
+				{
+					string t = "connectDummy";
+					sendMessage(t);
+				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
