@@ -154,10 +154,10 @@ void ObjManager::drawBox(btVector3 dim ,sf::Texture* tex, int c) {
     
     //Top face
     glBegin(GL_POLYGON);
-    glTexCoord2f(1,1); glVertex3f(-x, y, -z);
-    glTexCoord2f(1,0); glVertex3f(-x, y, z);
-    glTexCoord2f(0,0); glVertex3f(x, y, z);
-    glTexCoord2f(0,1); glVertex3f(x, y, -z);
+    /*glTexCoord2f(1,1); */glVertex3f(-x, y, -z);
+    /*glTexCoord2f(1,0); */glVertex3f(-x, y, z);
+    /*glTexCoord2f(0,0); */glVertex3f(x, y, z);
+    /*glTexCoord2f(0,1); */glVertex3f(x, y, -z);
     glEnd();
     
     //Bottom face
@@ -194,7 +194,7 @@ void ObjManager::render(OBJECT_TYPE id){
 		}
         case ENDPOINT : {
             //draw a cyclinder.
-            drawEndpoint(btVector3(100,1000,100));
+            drawEndpoint(btVector3(50,1000,50));
         }
 		default: break;
 	}

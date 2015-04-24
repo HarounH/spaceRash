@@ -29,7 +29,7 @@ void HUD::init(Player* _usrptr, sf::RenderWindow& wnd) {
 
 	map.setRadius(50.0f);
 	map.setFillColor(sf::Color(0,0,0,100));
-	map.setPosition(100, wnd.getSize().y-75);
+	map.setPosition(0.0, wnd.getSize().y-100); //-100 because radius is 50. duh?
 
 	ep.setRadius(5);
 	ep.setFillColor(sf::Color::Green);
@@ -38,6 +38,11 @@ void HUD::init(Player* _usrptr, sf::RenderWindow& wnd) {
 	health.setSize(sf::Vector2f(wnd.getSize().x,2.0f));
 	health.setPosition(0.0 , wnd.getSize().y/2 + 160);
 	healthBarSize = wnd.getSize().x;
+
+	ammobar.setFillColor(sf::Color::Red);
+	ammobar.setSize(sf::Vector2f(wnd.getSize().x,2.0f));
+	ammobar.setPosition(0.0 , wnd.getSize().y/2 + 170);
+	ammoBarSize = wnd.getSize().x;
 
 }
 
@@ -61,6 +66,11 @@ void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	health.setSize(sf::Vector2f((float)refer->getHealth()/1000.0*healthBarSize,2.0f));
 	//cout<<"Remaining Health"<<(float)refer->getHealth()/1000.0*healthBarSize;
 
+	ammobar.setPosition(sf::Vector2f(offset/2.0*ammoBarSize,ammobar.getPosition().y));
+	//cout<<"Lost Health"<<offset/2.0*healthBarSize<<"\n";
+	ammobar.setSize(sf::Vector2f((float)refer->getActiveWeapon()->ammo/1000.0*ammoBarSize,2.0f));
+	//cout<<"Remaining Health"<<(float)refer->getHealth()/1000.0*healthBarSize;
+
 	if (refer->getHealth() > 500) {
 		health.setFillColor(sf::Color::Green);
 	} 
@@ -73,7 +83,7 @@ void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 
 	btVector3 pos =  quatRotate(refer->getRigidBody()->getOrientation() , btVector3(900,0,-900) - refer->getRigidBody()->getCenterOfMassPosition());
 	ep.setPosition( map.getPosition().x +((pos.getX())/100), map.getPosition().y + ((pos.getZ())/100));
-
+	wnd.draw(ammobar);
 	wnd.draw(health);
 	wnd.draw(map);
 	wnd.draw(ep);
