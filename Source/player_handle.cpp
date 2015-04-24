@@ -38,13 +38,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				bool flag = false;
 				while(!flag)
 				{
+					flag = true;
 					sendMessage();
 					receiveMessage();
 					for(int i = 0; i < (int)confirmed.size(); i++)
 					{
 						if(confirmed[i] == false)
 						{
-							flag = true;
+							flag = false;
 							break;
 						}
 					}
@@ -66,13 +67,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				flag = false;
 				while(!flag)
 				{
+					flag = true;
 					sendMessage();
 					receiveMessage();
 					for(int i = 0; i < (int)confirmed.size(); i++)
 					{
 						if(confirmed[i] == false)
 						{
-							flag = true;
+							flag = false;
 							break;
 						}
 					}
@@ -125,13 +127,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				bool flag = false;
 				while(!flag)
 				{
+					flag = true;
 					sendMessage();
 					receiveMessage();
 					for(int i = 0; i < (int)confirmed.size(); i++)
 					{
 						if(confirmed[i] == false)
 						{
-							flag = true;
+							flag = false;
 							break;
 						}
 					}
@@ -146,13 +149,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				flag = false;
 				while(!flag)
 				{
+					flag = true;
 					sendMessage();
 					receiveMessage();
 					for(int i = 0; i < (int)confirmed.size(); i++)
 					{
 						if(confirmed[i] == false)
 						{
-							flag = true;
+							flag = false;
 							break;
 						}
 					}
@@ -205,7 +209,6 @@ void Player::handleMessage(Message msg, int network_int) {
 					}
 					usleep(15000);
 				}
-				sendMessage();
 
 				*(myMessage) = msg;
 				confirmed.resize(network->numberOfClients(), false);
@@ -214,26 +217,25 @@ void Player::handleMessage(Message msg, int network_int) {
 				flag = false;
 				while(!flag)
 				{
+					flag = true;
 					sendMessage();
 					receiveMessage();
 					for(int i = 0; i < (int)confirmed.size(); i++)
 					{
 						if(confirmed[i] == false)
 						{
-							flag = true;
+							flag = false;
 							break;
 						}
 					}
 					usleep(15000);
 				}
-				sendMessage();
 			}
 			else
 			{
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				sendMessageToClient(network_int);
 			}
-
 		}
 		else if(!hasSetInitialPosition)
 		{
