@@ -35,7 +35,25 @@ void Player::connectToNetwork(string IP, unsigned short server_port, string loca
 	myMessage->setData((int)CONNECTDATA, local_ip, local_port);
 	myMessage->ship.objType = fighter->getType();
 	myMessage->playerName = settings->name;
-	sendMessage();
+	
+	confirmed.resize(network->numberOfClients(), false);
+	for(int i = 0; i < (int)confirmed.size(); i++)
+		confirmed[i] = false;
+	bool flag = false;
+	while(!flag)
+	{
+		sendMessage();
+		receiveMessage();
+		for(int i = 0; i < (int)confirmed.size(); i++)
+		{
+			if(confirmed[i] == false)
+			{
+				flag = true;
+				break;
+			}
+		}
+		usleep(15000);
+	}
 }
 
 void Player::setGeneralData() {

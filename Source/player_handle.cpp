@@ -23,6 +23,8 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				//send this message to everyone else
+				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+				sendMessageToClient(network_int);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
@@ -109,7 +111,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(client_id);
+				sendMessageToClient(network_int);
 
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
@@ -177,7 +179,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(client_id);
+				sendMessageToClient(network_int);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				myMessage->playerName = settings->name;
