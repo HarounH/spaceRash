@@ -140,6 +140,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				cout << network->numberOfClients() << "\n";
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				*(myMessage) = msg;
+				confirmed.resize(network->numberOfClients(), false);
 				for(int i = 0; i < (int)confirmed.size(); i++)
 					confirmed[i] = false;
 				flag = false;
@@ -186,6 +187,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
+				confirmed.resize(network->numberOfClients(), false);
 				for(int i = 0; i < (int)confirmed.size(); i++)
 					confirmed[i] = false;
 				bool flag = false;
@@ -206,6 +208,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				sendMessage();
 
 				*(myMessage) = msg;
+				confirmed.resize(network->numberOfClients(), false);
 				for(int i = 0; i < (int)confirmed.size(); i++)
 					confirmed[i] = false;
 				flag = false;
@@ -249,7 +252,7 @@ void Player::handleMessage(Message msg, int network_int) {
 		}
 	}
 
-	if(msg.msgType & CONFIRMDATA)
+	if((msg.msgType & CONFIRMDATA) && network_int != -1)
 		confirmed[network_int - 1] = false;
 	
 	if (msg.msgType & GENDATA) {
