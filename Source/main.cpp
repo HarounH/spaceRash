@@ -50,11 +50,27 @@ int main(int argc, char** argv) {
     // cout << "#brk2\n";
     usr->init_fighter();
     // cout << "#brk3\n";
-    std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(1) ;
-    (*displayList)[0] = usr->getFighter();
+    std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(2) ;
+    (*displayList)[0] = new SpaceObject(XWING);
+    (*displayList)[1] = new SpaceObject(TIE);
+    BulletWorld* tempWorld = new BulletWorld();
+    (*displayList)[0]->init(tempWorld);
+    (*displayList)[1]->init(tempWorld);
+
+    //TODO: Set their centre of mass positions.
+    btTransform t0(btQuaternion(0,1,0,0), btVector3(5,0,5));
+    btTransform t1(btQuaternion(0,1,0,0), btVector3(-5,0,-5));
+    (*displayList)[0]->getRigidBody()->setCenterOfMassTransform(t0);
+    (*displayList)[1]->getRigidBody()->setCenterOfMassTransform(t1);
+    tempWorld->dynamicsWorld->stepSimulation(1.0f);
     bool selectionDone=false;
     SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
     selectShipScreen->Run2(selectionDone,mObjManager);
+
+    for(int i=0; i<2; ++i) {
+        tempWorld->dynamicsWorld->removeRigidBody((*displayList)[i]->getRigidBody());
+    }
+    delete tempWorld;
     StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
     startJoinScreen->Run();
     
@@ -181,7 +197,6 @@ int main(int argc, char** argv) {
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //---------------------------------------------//
-         cout<<usr->getFighter()->getHealth()<<"\n";
         usr->update_state(dt);
         
         usr->render_state(dt);
