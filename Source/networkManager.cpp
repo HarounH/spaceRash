@@ -72,7 +72,7 @@ NetworkManager::NetworkManager(string local_ip, unsigned short local_port) : soc
 
 }
 
-unsigned long long NetworkManager::addClient(string IP, unsigned short server_port) {
+long long NetworkManager::addClient(string IP, unsigned short server_port) {
 	boost::asio::ip::udp::resolver resolver(io_service);
 	boost::asio::ip::udp::resolver::query query(udp::v4(), IP, boost::lexical_cast< std::string >(server_port));
 	boost::asio::ip::udp::resolver::iterator iterator = resolver.resolve(query);

@@ -74,6 +74,14 @@ void Player::sendMessage() {
 	network->SendToAll(message);
 }
 
+void Player::sendMessageToClient(long long client_id) {
+	std::ostringstream archive_stream;
+	boost::archive::text_oarchive archive(archive_stream);
+	archive << (*myMessage);
+	std::string message = archive_stream.str();
+	network->SendToClient(message, client_id);
+}
+
 void Player::translateMessage(ClientMessage inMessage) {
 	Message message;
 	std::istringstream archive_stream(inMessage.first);

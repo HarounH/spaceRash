@@ -72,7 +72,7 @@ class NetworkManager{
 		NetworkManager(string local_ip, unsigned short local_port = 2000);
 
 		
-		unsigned long long addClient(string IP, unsigned short server_port);
+		long long addClient(string IP, unsigned short server_port);
 		
 		~NetworkManager();
 

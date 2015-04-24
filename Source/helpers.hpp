@@ -139,7 +139,7 @@ enum OBJECT_TYPE {
 enum MESSAGE_PROTOCOL { GENDATA=1 , //use these messages as an internal protocol.
 					LASERDATA=2,
 					COLLISIONDATA=4,
-					CHATDATA=8,
+					CONFIRMDATA=8,
 					CONNECTDATA=16,
 					SETCONNECTDATA=32
 };

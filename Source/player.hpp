@@ -44,6 +44,7 @@ private:
 	NametoPType NameToP;
 	NetworkManager* network;
 	Message* myMessage;
+	std::vector<bool> confirmed;
 	/* Rendering geometry */
 	//sf::Window* wnd; //Window that things run on. <-- deprecated.
 	/* Physics geometry. */
@@ -116,6 +117,7 @@ public:
 	void setGeneralData();
 	void sendMessage();
 	void sendMessage(std::string);
+	void sendMessageToClient(long long);
 	void translateMessage(ClientMessage);
 	void receiveMessage();
 	void handleMessage(Message, int);
