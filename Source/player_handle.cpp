@@ -3,6 +3,7 @@
 #include "player.hpp"
 
 void Player::handleMessage(Message msg, int network_int) {
+	bool deferSetConnect = false;
 	//I need, the spaceObject's int-index, the spaceObject's linear velocity, angular velocity, health, ammo and so on.
 	if ((msg.msgType & CONNECTDATA) && didStart) {
 		//might need to add to list of clients
@@ -38,6 +39,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				(myMessage->ship).transform.assign(temp , temp + 15);
 				sendMessage();
 				numPlayers--;
+				deferSetConnect = true;
 			}
 		}
 	}
@@ -182,6 +184,28 @@ void Player::handleMessage(Message msg, int network_int) {
 			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
 		}
 		
+	}
+
+	if(deferSetConnect)
+	{
+		myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
+		btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+		float temp[16];
+		mytrans.getOpenGLMatrix(temp);
+		(myMessage->ship).transform.assign(temp , temp + 15);
+		sendMessage();
+		*(myMessage) = msg;
+		myMessage->msgType = (int) SETCONNECTDATA;
+		btVector3 np(0, 0, 0);
+		getNextValidPosition(np);
+		btTransform yourTrans;
+		yourTrans.setIdentity();
+		yourTrans.setOrigin(np);
+		yourTrans.getOpenGLMatrix(temp);
+		(myMessage->ship).transform.assign(temp , temp + 15);
+		sendMessage();
+		deferSetConnect = true;
+		numPlayers--;
 	}
 }
 

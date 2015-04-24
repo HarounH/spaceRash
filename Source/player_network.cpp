@@ -32,6 +32,7 @@ void Player::startNetwork(string local_ip, unsigned short local_port) {
 void Player::connectToNetwork(string IP, unsigned short server_port, string local_ip, unsigned short local_port) {
 	network = new NetworkManager(IP, server_port, local_ip, local_port);
 	myMessage->setData((int)CONNECTDATA, local_ip, local_port);
+	myMessage->ship.objType = fighter->getType();
 	sendMessage();
 }
 
