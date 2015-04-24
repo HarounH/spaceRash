@@ -60,7 +60,7 @@ public:
 	void didHit(bool _wasHit) { wasHit = _wasHit; }
 	bool didFire() { return fired; }
 	void didFire(bool _fired) { fired = _fired; }
-
+	SpaceObject* getHitShip() { return ship_hit; }
 	/* physics things that we must implement using quaternions and the sort. */
 	void accelerate();
 	void decelerate();
@@ -87,6 +87,7 @@ private:
 	int health;
 	bool wasHit;
 	bool fired;
+	SpaceObject* ship_hit;
 	btVector3 fireFrom;
 	btVector3 fireTo;
 	btScalar maxVelocity;

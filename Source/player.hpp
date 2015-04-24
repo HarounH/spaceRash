@@ -18,6 +18,11 @@ typedef NtoPType::value_type NtoPTypeNormal;
 typedef NtoPType::left_value_type NtoPTypeLeft;
 typedef NtoPType::right_value_type NtoPTypeRight;
 
+typedef boost::bimap<string,int> NametoPType;
+typedef NametoPType::value_type NametoPTypeNormal;
+typedef NametoPType::left_value_type NametoPTypeLeft;
+typedef NametoPType::right_value_type NametoPTypeRight;
+
 class Player {
 private:
 	/* misc data. */
@@ -36,6 +41,7 @@ private:
 	/* network integration */
 	State* myState;
 	NtoPType NtoP;  // for every network int,there must be a player int
+	NametoPType NameToP;
 	NetworkManager* network;
 	Message* myMessage;
 	/* Rendering geometry */
@@ -57,6 +63,9 @@ public:
 	Player(ObjManager*);
 	~Player();
 
+	bool hasWon;
+	bool endGame;
+
 	bool started() { return didStart; }
 	void started(bool _didStart) { didStart = _didStart; }
 	bool beginGame() { return startGame; }
@@ -65,8 +74,11 @@ public:
 	NetworkManager* getNetwork() { return network; } 
 
 	SpaceObject* which_spaceObject(int network_int);
+	SpaceObject* which_spaceObject(string playerName);
+	string which_player_name(SpaceObject* obj);
 
 	bool addtoNtoP(int network_int, int player_int);
+	bool addtoNametoP(string playerName, int player_int);
 	
 	void init_bulletWorld();
 	void init_fighter();
@@ -103,7 +115,7 @@ public:
 	void connectToNetwork(string, unsigned short, string, unsigned short);
 	void setGeneralData();
 	void sendMessage();
-	void sendMessage(std::string&);
+	void sendMessage(std::string);
 	void translateMessage(ClientMessage);
 	void receiveMessage();
 	void handleMessage(Message, int);

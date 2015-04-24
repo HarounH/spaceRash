@@ -13,14 +13,14 @@ SpaceObject* Player::getSpaceObject(int ID){
 	else
 		return nullptr;
 }
+
 int Player::getID(SpaceObject* spaceObject){
-	int temporary = -1;
-	try{
-		temporary = EveryOne.right.at(spaceObject);
-	}catch(std::out_of_range & e ){
+
+	auto objectitr = EveryOne.right.find(spaceObject);
+	if(objectitr != EveryOne.right.end())
+		return objectitr->second;
+	else
 		return -1;
-	}
-	return temporary;	
 }
 
 UserSettings* Player::getSettings() {

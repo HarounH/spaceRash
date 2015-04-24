@@ -1,6 +1,7 @@
 #ifndef PLAYER_CPP
 #define PLAYER_CPP
 #include "player.hpp"
+
 /*--------TODO: DECIDE ON THE SKY BOX DIMENSIONS---------------*/
 Player::Player(ObjManager* mObjManager) {
 	//network = new NetworkManager();
@@ -22,6 +23,8 @@ Player::Player(ObjManager* mObjManager) {
 	numAIs = 0;
 	hasSetInitialPosition = false;
 	allObjects = mObjManager;
+	hasWon = false;
+	endGame = false;
 }
 
 Player::~Player() {
@@ -175,9 +178,40 @@ SpaceObject* Player::which_spaceObject(int network_int){
     /* Assert : no player corresponding to this network int means this spaceObject hasn't yet been added */
 }
 
+SpaceObject* Player::which_spaceObject(string playerName) {
+	auto cit = NameToP.left.find(playerName);
+	if (cit != NameToP.left.end())
+    {
+    	int player_int = cit->second;
+    	// return spaceobject corresponding to this player_int
+    	return getSpaceObject(player_int);
+    }
+    
+    return nullptr;
+}
+
+string Player::which_player_name(SpaceObject* obj) {
+	int pid = getID(obj);
+	if(pid != -1)
+	{
+		auto cit = NameToP.right.find(pid);
+		if (cit != NameToP.right.end())
+	    {
+	    	 return cit->second;
+	    }
+	}
+    
+    return "";
+}
+
 bool Player::addtoNtoP(int network_int, int player_int) {
 	//TODO: add the pair of network_int and player_int to the bimap.
 	return NtoP.insert(NtoPTypeNormal(network_int,player_int)).second;
+}
+
+bool Player::addtoNametoP(string playerName, int player_int) {
+	//TODO: add the pair of network_int and player_int to the bimap.
+	return NameToP.insert(NametoPTypeNormal(playerName,player_int)).second;
 }
 
 bool Player::addToEveryOne(int ID,SpaceObject*& OBJ){
@@ -202,6 +236,8 @@ bool Player::collisionCallback(btManifoldPoint& cp,
 	#define obj2 obj2->getCollisionObject()
 	((SpaceObject*)(obj1->getUserPointer()))->handleCollision(((SpaceObject*)(obj2->getUserPointer())));
 	((SpaceObject*)(obj2->getUserPointer()))->handleCollision(((SpaceObject*)(obj1->getUserPointer())));
+	SpaceObject* o1 = ((SpaceObject*)(obj1->getUserPointer()));
+	SpaceObject* o2 = ((SpaceObject*)(obj2->getUserPointer()));
 	#undef obj1
 	#undef obj2
 	return false;

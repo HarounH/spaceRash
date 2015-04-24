@@ -19,6 +19,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(nextClientId, nextPlayerId);
+					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
@@ -30,6 +31,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				sendMessage();
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
+				myMessage->playerName = settings->name;
 				btVector3 np(0, 0, 0);
 				getNextValidPosition(np);
 				btTransform yourTrans;
@@ -64,6 +66,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(nextClientId, nextPlayerId);
+					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
@@ -71,6 +74,7 @@ void Player::handleMessage(Message msg, int network_int) {
 
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
+				myMessage->playerName = settings->name;
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
@@ -96,12 +100,14 @@ void Player::handleMessage(Message msg, int network_int) {
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(client_id, nextPlayerId);
+					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
+				myMessage->playerName = settings->name;
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
@@ -129,7 +135,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	
 	if (msg.msgType & GENDATA) {
 		//get the spaceObject and set its state?
-		SpaceObject* obj = which_spaceObject(network_int);
+		SpaceObject* obj = which_spaceObject(msg.playerName);
 		if(obj != nullptr)
 		{
 			obj->setState(msg.ship);			
@@ -152,6 +158,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(nextClientId, nextPlayerId);
+					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
@@ -160,6 +167,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
+				myMessage->playerName = settings->name;
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
 
@@ -175,37 +183,19 @@ void Player::handleMessage(Message msg, int network_int) {
 	}
 
 	if (msg.msgType & LASERDATA) {
-		SpaceObject* obj = which_spaceObject(network_int);
+		SpaceObject* obj = which_spaceObject(msg.playerName);
 		if(obj != nullptr)
 		{
 			obj->setActiveWeapon(msg.wpnType);
 			btVector3 laserFrom, laserTo;
 			msg.getData(laserFrom, laserTo);
 			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
+			if(msg.hitPlayerName == settings->name)
+			{
+				fighter->hit_by_laser();
+			}
 		}
 		
-	}
-
-	if(deferSetConnect)
-	{
-		myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
-		btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
-		float temp[16];
-		mytrans.getOpenGLMatrix(temp);
-		(myMessage->ship).transform.assign(temp , temp + 15);
-		sendMessage();
-		*(myMessage) = msg;
-		myMessage->msgType = (int) SETCONNECTDATA;
-		btVector3 np(0, 0, 0);
-		getNextValidPosition(np);
-		btTransform yourTrans;
-		yourTrans.setIdentity();
-		yourTrans.setOrigin(np);
-		yourTrans.getOpenGLMatrix(temp);
-		(myMessage->ship).transform.assign(temp , temp + 15);
-		sendMessage();
-		deferSetConnect = true;
-		numPlayers--;
 	}
 }
 

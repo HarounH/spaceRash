@@ -31,8 +31,10 @@ void Player::startNetwork(string local_ip, unsigned short local_port) {
 
 void Player::connectToNetwork(string IP, unsigned short server_port, string local_ip, unsigned short local_port) {
 	network = new NetworkManager(IP, server_port, local_ip, local_port);
+	sendMessage(string("connectDummy"));
 	myMessage->setData((int)CONNECTDATA, local_ip, local_port);
 	myMessage->ship.objType = fighter->getType();
+	myMessage->playerName = settings->name;
 	sendMessage();
 }
 
@@ -41,6 +43,7 @@ void Player::setGeneralData() {
 	myMessage->msgType = (int) GENDATA;
 	myMessage->newConnectorIP = network->getMyIP();
 	myMessage->newConnectorPort = network->getMyPort();
+	myMessage->playerName = settings->name;
 	if(fighter->didFire())
 	{
 		myMessage->msgType = myMessage->msgType | ((int) LASERDATA);
@@ -50,6 +53,8 @@ void Player::setGeneralData() {
 		myMessage->setData(from, to);
 		if(fighter->didHit())
 		{
+			SpaceObject* hitShip = fighter->getHitShip();
+			myMessage->hitPlayerName = which_player_name(hitShip);
 			fighter->didHit(false);
 		}
 		fighter->didFire(false);
@@ -57,7 +62,7 @@ void Player::setGeneralData() {
 	sendMessage();
 }
 
-void Player::sendMessage(std::string& message) {
+void Player::sendMessage(std::string message) {
 	network->SendToAll(message);
 }
 
@@ -81,8 +86,9 @@ void Player::receiveMessage() {
 	ClientMessage inMessage = network->popMessage();
 	if(inMessage.first == "go")
 		startGame = true;
+	else if(inMessage.first == "connectDummy")
+		return;
 	else if(inMessage.first != "")
 		translateMessage(inMessage);
 }
-
 #endif

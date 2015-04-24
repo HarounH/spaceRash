@@ -160,15 +160,18 @@ void SpaceObject::fire_laser() {
 	body->getMotionState()->getWorldTransform(trans);
 	btVector3 from = trans.getOrigin();
 	std::cout << body->getOrientation().getX() << "," << body->getOrientation().getY() << "," << body->getOrientation().getZ() << "," << body->getOrientation().getW() << "\n";
-	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-500));
+	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-20));
 		
 	//Perform ray test.
 	btCollisionWorld::ClosestRayResultCallback rayCallback( from, to );
 	world->dynamicsWorld->rayTest(from,to,rayCallback);
 	//get results.
 	if ( rayCallback.hasHit() ) {
-		((SpaceObject*)rayCallback.m_collisionObject->getUserPointer())->hit_by_laser();
-		to = ((SpaceObject*)rayCallback.m_collisionObject->getUserPointer())->getRigidBody()->getCenterOfMassPosition();
+		to = rayCallback.m_hitPointWorld;
+		// to = ((SpaceObject*)rayCallback.m_collisionObject->getUserPointer())->getRigidBody()->getCenterOfMassPosition();
+		ship_hit = (SpaceObject*)rayCallback.m_collisionObject->getUserPointer();
+		if(ship_hit->getType() != SKYRISE_TALL && ship_hit->getType()!= SKYRISE_FAT && ship_hit->getType()!= ENDPOINT)
+			wasHit = true;
 	} //else, do nothing.
 	weapons[activeWeapon] -> fireProjectile(from,to);
 	fireFrom = from;
@@ -177,7 +180,7 @@ void SpaceObject::fire_laser() {
 }
 
 void SpaceObject::hit_by_laser() {
-	wasHit = true;
+	health -= 10;
 }
 
 #endif
