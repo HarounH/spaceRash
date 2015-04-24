@@ -99,7 +99,11 @@ void Player::handleMessage(Message msg, int network_int) {
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				*(myMessage) = msg;
 				
-				sendMessage();
+				for(auto it = iplist.begin(); it != iplist.end(); it++)
+				{
+					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
+					sendMessage();
+				}
 
 			}
 			else if(which_spaceObject(client_id) == nullptr) {
@@ -136,7 +140,11 @@ void Player::handleMessage(Message msg, int network_int) {
 
 				*(myMessage) = msg;
 				
-				sendMessage();
+				for(auto it = iplist.begin(); it != iplist.end(); it++)
+				{
+					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
+					sendMessage();
+				}
 
 			}
 			else
