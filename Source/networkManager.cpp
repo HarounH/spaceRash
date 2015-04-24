@@ -146,6 +146,7 @@ void NetworkManager::SendToClient(const std::string& message, long long clientID
     }
     catch (std::out_of_range) {
         //LogMessage::error("Unknown client ID");
+        cout << "weird issue\n";
     }
 }
 
