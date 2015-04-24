@@ -53,7 +53,7 @@ void Player::connectToNetwork(string IP, unsigned short server_port, string loca
 				break;
 			}
 		}
-		usleep(15000);
+		usleep(40000);
 	}
 }
 

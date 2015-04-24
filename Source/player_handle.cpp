@@ -52,7 +52,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
@@ -81,7 +81,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 				numPlayers--;
 				deferSetConnect = true;
@@ -113,7 +113,10 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				for(int i = 1; i < 4; i++)
-					sendMessage(string("connectDummy"));
+				{
+					string t = connectDummy;
+					sendMessage(t);
+				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
@@ -143,7 +146,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 				cout << network->numberOfClients() << "\n";
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
@@ -165,7 +168,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 			}
 			else if(which_spaceObject(client_id) == nullptr) {
@@ -215,7 +218,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 
 				*(myMessage) = msg;
@@ -236,7 +239,7 @@ void Player::handleMessage(Message msg, int network_int) {
 							break;
 						}
 					}
-					usleep(15000);
+					usleep(40000);
 				}
 			}
 			else
