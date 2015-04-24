@@ -30,10 +30,12 @@ void lettherebelight() {
 int main(int argc, char** argv) {
     //-----------SETTING PATHS TO THE OBJECTS TO BE RENDERED-------//
     vector<string> filePaths(4);
+    string img1 = "skyrise_tall.jpg";
+    string img2 = "img1.jpg";
     filePaths[0] = OBJ_RSC_DIR+TIEF_FNAME+OBJ_EXTENSION;
     filePaths[1] = OBJ_RSC_DIR+XWING_FNAME+OBJ_EXTENSION;
-    filePaths[2] = OBJ_RSC_DIR+SKYRISE_TALL_FNAME+OBJ_EXTENSION;
-    filePaths[3] = OBJ_RSC_DIR+SKYRISE_FAT_FNAME+OBJ_EXTENSION;
+    filePaths[2] = OBJ_RSC_DIR+ img1; //SKYRISE_TALL_FNAME+OBJ_EXTENSION;
+    filePaths[3] = OBJ_RSC_DIR+ img2; //SKYRISE_FAT_FNAME+OBJ_EXTENSION;
     ObjManager* mObjManager;
     // cout << "#brk3\n";
     mObjManager = new ObjManager;
@@ -42,84 +44,84 @@ int main(int argc, char** argv) {
 
     //---------------LET THE GAMES BEGIN--------------------------//
     Player* usr = new Player(mObjManager);
-    // HUD mHud;
+    HUD mHud;
     // cout << "#brk1\n";
     usr->setFighterType(XWING);
     // cout << "#brk2\n";
     usr->init_fighter();
     // cout << "#brk3\n";
-    // std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(1) ;
-    // (*displayList)[0] = usr->getFighter();
-    // bool selectionDone=false;
-    // SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
-    // selectShipScreen->Run2(selectionDone,mObjManager);
-    // StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
-    // startJoinScreen->Run();
+    std::vector<SpaceObject*>* displayList= new vector<SpaceObject*>(1) ;
+    (*displayList)[0] = usr->getFighter();
+    bool selectionDone=false;
+    SelectShipScreen* selectShipScreen = new SelectShipScreen(usr , displayList);
+    selectShipScreen->Run2(selectionDone,mObjManager);
+    StartJoinScreen* startJoinScreen = new StartJoinScreen(usr);
+    startJoinScreen->Run();
     
 
     unsigned short myport, connect_to_port;
     string myip, connect_to_ip;
 
     double dt = 0.03;
-    // {
-    //     sf::Window wnd(sf::VideoMode(150 , 150), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
-    //     sfg::SFGUI sfgui;
-    //     auto lonelyTable = sfg::Table::Create();
-    //     auto waitLabel = sfg::Label::Create("Waiting...");
+    {
+        sf::Window wnd(sf::VideoMode(150 , 150), "Select your ship!" , sf::Style::Titlebar | sf::Style::Close/*, sf::ContextSettings(32)*/);
+        sfg::SFGUI sfgui;
+        auto lonelyTable = sfg::Table::Create();
+        auto waitLabel = sfg::Label::Create("Waiting...");
 
-    //     lonelyTable->SetRowSpacings(5.f);
-    //     lonelyTable->SetColumnSpacings(5.f);
-    //     lonelyTable->Attach(waitLabel , sf::Rect<sf::Uint32>(0,0,1,1) , sfg::Table::EXPAND|sfg::Table::FILL ,sfg::Table::EXPAND|sfg::Table::FILL );
+        lonelyTable->SetRowSpacings(5.f);
+        lonelyTable->SetColumnSpacings(5.f);
+        lonelyTable->Attach(waitLabel , sf::Rect<sf::Uint32>(0,0,1,1) , sfg::Table::EXPAND|sfg::Table::FILL ,sfg::Table::EXPAND|sfg::Table::FILL );
 
-    //     auto sfgwnd = sfg::Window::Create();
-    //     sfgwnd->Add(lonelyTable);
-    //     sfg::Desktop desktop;
-    //     desktop.Add(sfgwnd);
-    //     bool internalRunning = true;
-    //     sf::Event event;
-    //     while(internalRunning) {
-    //         while(wnd.pollEvent(event)) {
-    //             desktop.HandleEvent(event);
-    //             if ( event.type == sf::Event::Closed) {
-    //                 internalRunning = false;
-    //             }
-    //         }
-    //         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //         desktop.Update(0.0f);
-    //         sfgui.Display(wnd);
-    //         wnd.display();
-    //         if(usr->started())
-    //         {
-    //             usr->receiveMessage();
-    //             if(usr->numberOfPlayers() == 1)
-    //             {
-    //                 string m = "go";
-    //                 usr->sendMessage(m);
-    //                 internalRunning = false;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             usr->receiveMessage();
-    //             if(usr->beginGame())
-    //                 internalRunning = false;
-    //         }
-    //         if(!internalRunning)
-    //         {
-    //             for(int i = 3; i >= 0; i--)
-    //             {
-    //                 std::string m = "Starting in ";
-    //                 m += to_string(i);
-    //                 waitLabel->SetText(m);
-    //                 usleep(1000000);
-    //             }
-    //         }
-    //     }
-    // }
+        auto sfgwnd = sfg::Window::Create();
+        sfgwnd->Add(lonelyTable);
+        sfg::Desktop desktop;
+        desktop.Add(sfgwnd);
+        bool internalRunning = true;
+        sf::Event event;
+        while(internalRunning) {
+            while(wnd.pollEvent(event)) {
+                desktop.HandleEvent(event);
+                if ( event.type == sf::Event::Closed) {
+                    internalRunning = false;
+                }
+            }
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            desktop.Update(0.0f);
+            sfgui.Display(wnd);
+            wnd.display();
+            if(usr->started())
+            {
+                usr->receiveMessage();
+                if(usr->numberOfPlayers() == 1)
+                {
+                    string m = "go";
+                    usr->sendMessage(m);
+                    internalRunning = false;
+                }
+            }
+            else
+            {
+                usr->receiveMessage();
+                if(usr->beginGame())
+                    internalRunning = false;
+            }
+            if(!internalRunning)
+            {
+                for(int i = 3; i >= 0; i--)
+                {
+                    std::string m = "Starting in ";
+                    m += to_string(i);
+                    waitLabel->SetText(m);
+                    usleep(1000000);
+                }
+            }
+        }
+    }
     
     //sf::RenderWindow window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
     sf::RenderWindow window(sf::VideoMode(usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY), "spaceRash" , sf::Style::Default, sf::ContextSettings(32));
-    // mHud.init(usr,window);
+    mHud.init(usr,window);
     usr->setup_game_screen( usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY );
     gContactAddedCallback=(Player::collisionCallback);
     // glEnable(GL_DEPTH_TEST);
@@ -148,13 +150,13 @@ int main(int argc, char** argv) {
     //Player* usr2 = new Player();
     
 
-    SpaceObject* otr = new SpaceObject(TIE);
-    otr->init(usr->getBulletWorld());
-    otr->getRigidBody()->translate(btVector3(0,0,-10));
-    usr->add_object(otr);
-    // double dt1;
-    // double dt2;
-    // int ctr=0;
+    // SpaceObject* otr = new SpaceObject(TIE);
+    // otr->init(usr->getBulletWorld());
+    // otr->getRigidBody()->translate(btVector3(0,0,-10));
+    // usr->add_object(otr);
+    double dt1;
+    double dt2;
+    int ctr=0;
     while (running)
     {
         sf::Event event;
@@ -166,7 +168,7 @@ int main(int argc, char** argv) {
             }
             else if (event.type == sf::Event::Resized) {
                 // adjust the viewport when the window is resized
-                //mHud.resize(window);
+               
                 usr->setup_game_screen( event.size.width , event.size.height );
                 
             }
@@ -179,6 +181,7 @@ int main(int argc, char** argv) {
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //---------------------------------------------//
+         cout<<usr->getFighter()->getHealth()<<"\n";
         usr->update_state(dt);
         
         usr->render_state(dt);
@@ -194,23 +197,23 @@ int main(int argc, char** argv) {
         glPopMatrix();*/
        
 
-       // mHud.draw(usr->getFighter(), window);
+        mHud.draw(usr->getFighter(), window);
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
         window.display();
-        // if ( ctr%TICKS==0 ) {
-        //     usr->setGeneralData();
-        //     for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
-        //         usr->receiveMessage();
-        // } 
-        // ctr = (ctr+1)%TICKS ;
+        if ( ctr%TICKS==0 ) {
+            usr->setGeneralData();
+            for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
+                usr->receiveMessage();
+        } 
+        ctr = (ctr+1)%TICKS ;
         
-        // dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;
-        // dt2 = dt1;
-        // int sleep = (15000) - (dt1 * 1000000);
-        // if(sleep > 0) {
-        //     usleep((unsigned int) sleep);
-        // }
+        dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;
+        dt2 = dt1;
+        int sleep = (15000) - (dt1 * 1000000);
+        if(sleep > 0) {
+            usleep((unsigned int) sleep);
+        }
     }
     delete usr;
     delete mObjManager;

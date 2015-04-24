@@ -12,7 +12,8 @@ void SpaceObject::render(bool dflag,ObjManager* mObjManager) {
     glPushMatrix();
         glMultMatrixf(mat_gl);
     if (dflag) {
-		render_physics(true);
+		if ( !(obj_type==SKYRISE_TALL||obj_type==SKYRISE_FAT) )
+            render_physics(true);
 	}
 	render_geometry(mObjManager);
     wasHit = false;

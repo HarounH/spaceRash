@@ -11,6 +11,7 @@ SpaceObject::SpaceObject(OBJECT_TYPE _type) {
 	objpath = OBJ_RSC_DIR;
 	phypath = PHY_RSC_DIR;
     activeWeapon = 0;
+    health = 1000;
 	//TODO
 
 }
@@ -138,6 +139,9 @@ void SpaceObject::createCompoundShape() {
 	dms = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 	shape->calculateLocalInertia(mass, moment_inertia);
 	btRigidBody::btRigidBodyConstructionInfo bodyCI(mass, dms, (btCollisionShape*)shape , moment_inertia );
+    bodyCI.m_restitution = 1.3f;
+    bodyCI.m_friction = 1.5f;
+    
     body = new btRigidBody(bodyCI);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
     body->setUserPointer(this);

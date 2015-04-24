@@ -15,9 +15,12 @@ struct HUD {
 	sf::Image crosshairimg;
 	sf::Texture crosshairtex;
 	sf::Sprite crosshair;
+	sf::CircleShape map;
+	sf::CircleShape ep; //endpoint marker.
+	sf::RectangleShape health;
 
 	void init(Player* _usr,sf::RenderWindow& wnd);
-	void resize(sf::RenderWindow& wnd);
+	void resize(sf::RenderWindow& wnd, sf::Event& event);
 	void draw(SpaceObject* s, sf::RenderWindow& window);
 };
 #endif
