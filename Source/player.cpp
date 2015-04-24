@@ -38,10 +38,11 @@ void Player::init_bulletWorld() {
 
 void Player::init_fighter() {
 	fighter = new SpaceObject(fighterType);
-//	fighter->initCommunications(myState , myMessage); //TODO
+	cout << "##brk2\n";
 	fighter->init(bulletWorld);
-	//fighter->setVelocity(btVector3(0,0,-5.0));
+	cout << "##brk3\n";
 	fighter->initCommunications(myState , myMessage);
+	cout << "##brk4\n";
 }
 
 
@@ -108,6 +109,20 @@ void Player::setup_game_screen(double winX, double winY) {
 	//glDepthMask(GL_TRUE);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
+
+	//lighting
+    float ambientLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    float diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+    float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    float lpos[] = {0.0f, 10.0f, 0.0f, 1.0f};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(settings->fov/2,winX/winY,0.1f,3000.0f);
@@ -120,7 +135,12 @@ void Player::toggle_camera(double x, double y) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	// gluLookAt(0,7.5,10, 0,0,0, 0,1.0,0);
-	
+	cout << fighter->cameras[camera_idx].first.getX() << "," << fighter->cameras[camera_idx].first.getY() << "," << fighter->cameras[camera_idx].first.getZ() << "," <<   
+		fighter->cameras[camera_idx].second.getX() << "," << fighter->cameras[camera_idx].second.getY() << "," << fighter->cameras[camera_idx].second.getZ()   << "\n";
+	/*gluLookAt( 0.0,0.0,5.0,
+        0.0,0.0,0.0,
+    	0,1.0,0);*/
+
 	gluLookAt( fighter->cameras[camera_idx].first.getX() , fighter->cameras[camera_idx].first.getY() , fighter->cameras[camera_idx].first.getZ() ,   
 		fighter->cameras[camera_idx].second.getX() , fighter->cameras[camera_idx].second.getY() , fighter->cameras[camera_idx].second.getZ() ,   
 		0,1.0,0);

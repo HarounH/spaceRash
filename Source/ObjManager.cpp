@@ -8,18 +8,20 @@ void ObjManager::LoadAllObjects(std::vector<std::string> & filePaths){
 		return;
 	}
 	allObjects.push_back(new ObjLoader("TIE.FIGHTER"));
-	allObjects[0]->LoadObjectFile(filePaths[0].c_str());
 	allObjects.push_back(new ObjLoader("X Wing"));
-	allObjects[1]->LoadObjectFile(filePaths[1].c_str());
 	allObjects.push_back(new ObjLoader("SKYRISE TALL"));
-	allObjects[2]->LoadObjectFile(filePaths[2].c_str());
 	allObjects.push_back(new ObjLoader("SKYRISE FAT"));
+	allObjects[0]->LoadObjectFile(filePaths[0].c_str());
+	allObjects[1]->LoadObjectFile(filePaths[1].c_str());
+	allObjects[2]->LoadObjectFile(filePaths[2].c_str());
 	allObjects[3]->LoadObjectFile(filePaths[3].c_str());
 }
 void ObjManager::render(OBJECT_TYPE id){
 	switch (id){
-		case TIE: allObjects[0]->render();
-				break;
+		case TIE: {
+			allObjects[0]->render();
+			break;
+			}
 		case XWING: allObjects[1]->render();
 				break;
 		case SKYRISE_TALL : allObjects[2]->render();

@@ -20,9 +20,9 @@ face::face(std::vector<int>& v,std::vector<int>& tex,int n,material* m,bool f){
                 texcoord.push_back(tex[i]);
         }
         normals = n;
-        cout<<"Materials Passed"<<(!m)<<"\n";
+        // cout<<"Materials Passed"<<(!m)<<"\n";
         mat  = m;
-        cout<<"Material for face "<<(!mat)<<"\n";
+        // cout<<"Material for face "<<(!mat)<<"\n";
         four = f;
 }
 face::~face(){
@@ -65,8 +65,9 @@ texcoord::texcoord(float a,float b){
         v=1-b;
 }
 
-int ObjLoader::LoadMaterialsFile(const char* filename){
-    std::ifstream mtlin(filename);
+int ObjLoader::LoadMaterialsFile(const char* fname){
+    std::string filename = OBJ_RSC_DIR +fname;
+    std::ifstream mtlin(filename.c_str());
     if(!mtlin.is_open()){
             std::cout<<"Error cannot open materials file "<<filename<<"\n";
             clean();
@@ -93,13 +94,13 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
                     continue;
             if(tmp[i][0]=='n' && tmp[i][1]=='e' && tmp[i][2]=='w'){
                     if(ismat){
-                            cout << "Read the upper material \n";
+                            // cout << "Read the upper material \n";
                             std::string tName = name;
                             if(strcmp(fileNm,"\0")!=0){
-                                    if(texture)
-                                        cout<<"\n\n\n\nhi\n";
-                                    else
-                                        cout<<"\n\n\n\nbye\n";
+                                    // if(texture)
+                                    //     cout<<"\n\n\n\nhi\n";
+                                    // else
+                                    //     cout<<"\n\n\n\nbye\n";
                                     materials[tName] =  new material(alpha,ns,ni,diff,amb,spec,illum,texture);
                                     texture = NULL;
                                     strcpy(fileNm,"\0");
@@ -139,12 +140,14 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
                     sscanf(tmp[i].c_str(),"illum %d",&illum);
                     ismat=true;
             }
-            else if(tmp[i][0]=='m' && tmp[i][1]=='a'){
+            else if(tmp[i][0]=='m' && tmp[i][1]=='a' && tmp[i][2]=='p' && tmp[i][3]=='_' && tmp[i][4]=='K'&& tmp[i][5]=='d'){
                     sscanf(tmp[i].c_str(),"map_Kd %s",fileNm);
                     loadTexture(fileNm,texture);
                     if(texture == NULL)
                             strcpy(fileNm,"\0");
                     ismat = true;
+            } else {
+                //do nothing.
             }
 
     }
@@ -159,7 +162,7 @@ int ObjLoader::LoadMaterialsFile(const char* filename){
             }
             else{
                 materials[tName] = new material(alpha,ns,ni,diff,amb,spec,illum,NULL);
-                cout << (!materials[tName]) << "is materials null?\n";
+                // cout << (!materials[tName]) << "is materials null?\n";
             }
     }
     // for(auto it = materials.begin();it!=materials.end(); ++it) {
@@ -421,7 +424,7 @@ void ObjLoader::clean(){
     for(int i=0;i<sourceImages.size();i++){
         delete sourceImages[i];
     }
-    glDeleteLists(ID,1);
+  
     materials.clear();
     faces.clear();
     normals.clear();
@@ -436,7 +439,7 @@ bool ObjLoader::loadTexture (const char* fname,sf::Texture* &tex){
     
     sf::Image* img = new sf::Image;
     
-    std::string filename = OBJ_RSC_DIR+fname;
+    std::string filename = OBJ_RSC_DIR + fname;
     
     if(!img->loadFromFile(filename.c_str())){
         cout << " Couldn't Load Image \n";
@@ -481,7 +484,7 @@ void ObjLoader::print(bool debugm) {
     cout << "nmaterials=" << materials.size() << "\n";
     for(auto it = materials.begin(); it!=materials.end(); ++it) {
         cout << "name=" << it->first << "\n";
-        it->second->print(true);
+        it->second->print(debugm);
     }
     cout << "is(mat,normal,tex)=" << ismaterial << isnormals << istexture << ")\n";
 

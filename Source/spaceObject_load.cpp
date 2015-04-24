@@ -48,8 +48,8 @@ void SpaceObject::init(BulletWorld* _world) {
 			weapons[0] = new Weapon( FORCE , btVector3(200,200,0));
 			break;
 		} case TIE : {
-			objpath += AMMO_FNAME + OBJ_EXTENSION;
-			phypath += AMMO_FNAME + PHY_EXTENSION;
+			objpath += TIEF_FNAME + OBJ_EXTENSION;
+			phypath += TIEF_FNAME + PHY_EXTENSION;
 			weapons.resize(1);
 			weapons[0] = new Weapon( MEDIUM_LASER , btVector3(200,200,0));
 			break;
@@ -100,6 +100,7 @@ void SpaceObject::init(BulletWorld* _world) {
 			return;
 		}
 	}
+	
 	physics_init();
 	render_init();
 	return;

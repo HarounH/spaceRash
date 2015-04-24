@@ -17,10 +17,6 @@ typedef boost::bimap<int,int> NtoPType;
 typedef NtoPType::value_type NtoPTypeNormal;
 typedef NtoPType::left_value_type NtoPTypeLeft;
 typedef NtoPType::right_value_type NtoPTypeRight;
-struct HUD{
-//Elements to show on the screen.
-
-};
 
 class Player {
 private:
@@ -34,7 +30,6 @@ private:
 	bool rotatePressed;
 	int nextSpaceObjId;
 	OBJECT_TYPE fighterType;
-	HUD hud;
 	SpaceObject* fighter;
 	ObjManager* allObjects;
 

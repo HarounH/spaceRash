@@ -1,9 +1,9 @@
 #ifndef Obj_Manager_hpp
 #define Obj_Manager_hpp
-#include "Obj_Loader.hpp"
+#include "obj_Loader.hpp"
 class ObjManager{
-	std::vector<ObjLoader*> allObjects;
 public:
+	std::vector<ObjLoader*> allObjects;
 	ObjManager(){};
 	void LoadAllObjects(std::vector<std::string> &filepaths);
 	void render(OBJECT_TYPE id);

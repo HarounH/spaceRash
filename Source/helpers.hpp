@@ -36,6 +36,7 @@ using namespace std;
 /**
 #defines.
 */
+const std::string debugPath = "Hello/render/";
 const std::string RSC_DIR= "Resource/"; //shouldn't need this, ideally.
 const std::string PHY_RSC_DIR =  "Resource/Physics/";
 const std::string OBJ_RSC_DIR = "Resource/Render/";
@@ -43,7 +44,7 @@ const std::string MUSIC_RSC_DIR = "Resource/Music/";
 const std::string SW_MUSIC = "SW";
 const std::string HEALTH_FNAME  = "health";
 const std::string AMMO_FNAME  = "ammo";
-const std::string TIEF_FNAME  = "tie";
+const std::string TIEF_FNAME  = "ties";
 const std::string ASTEROID_FNAME  = "asteroid";
 const std::string XWING_FNAME  = "xwing";
 const std::string MF_FNAME  = "mf";
