@@ -200,7 +200,7 @@ struct Message {
 	int msgType;
 	State ship; //general data - includes myShip details.
 	//collision data, is essentially health and new transform.
-	std::string chatMessage;	 //chat data.
+	std::string hitPlayerName;	 //chat data.
 	std::vector<float> laserFrom,laserTo; //laser data. LINE SEGMENT.
 	int wpnType;
 	/* Connection data */
@@ -209,37 +209,38 @@ struct Message {
 	/*
 		IDEA : Forward this message to everyone, and respond to the sender with my details.
 	*/
-	std::string worldData; //file name to load from.
+	std::string playerName; //file name to load from.
 
 	Message(int prot , 
 		int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 		btVector3& _laserFrom , btVector3& _laserTo , int& _wpnType , 
-		std::string ip = "" , unsigned short port = 0, std::string chatmsg = "" , std::string worldfile = "");
+		std::string ip = "" , unsigned short port = 0, std::string hitname = "" , std::string name = "");
 	Message();
 	Message(Message& other);
 	Message& operator= (Message& other);
 	void setData(int prot , 
 		int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 		btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-		std::string ip = "" , unsigned short port = 0, std::string chatmsg = "" , std::string worldfile = "");
+		std::string ip = "" , unsigned short port = 0, std::string hitname = "" , std::string name = "");
 	void setData(int prot, std::string ip = "", unsigned short port = 0);
+	void setData(btVector3& _laserFrom, btVector3& _laserTo);
 	void setData( int prot , State* state , Weapon* wpn );
 	void getData(int prot , 
 		int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 		btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-		std::string& ip, unsigned short port, std::string& chatmsg, std::string& worldfile);
+		std::string& ip, unsigned short port, std::string& hitname, std::string& name);
 	void getData(btVector3&, btVector3&);
 	
 	template<typename Archive>
 	void serialize(Archive& ar, const unsigned int version) {
 		ar & msgType;
 		ar & ship;
-		ar & chatMessage;
+		ar & hitPlayerName;
 		ar & laserFrom;
 		ar & laserTo;
 		ar & newConnectorIP;
 		ar & newConnectorPort;
-		ar & worldData;
+		ar & playerName;
 	}
 	void print(){
 		cout<<newConnectorIP<<" "<<newConnectorPort<<"\n";

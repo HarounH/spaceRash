@@ -102,14 +102,15 @@ void State::getData(int& h, int& am, btTransform& t, btVector3& velo, btVector3&
 Message::Message(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo , int& _wpnType , 
-	std::string ip /*= ""*/ , unsigned short port /*= 0*/, std::string chatmsg /*= ""*/ , std::string worldfile /*= ""*/) : 
+	std::string ip /*= ""*/ , unsigned short port /*= 0*/, std::string hitname /*= ""*/ , std::string name /*= ""*/) : 
     ship(h, am, t, velo, avelo , _t) {
 	
 	msgType = prot;
 	wpnType = _wpnType;
 	newConnectorIP = ip;
 	newConnectorPort = port;
-	chatMessage = chatmsg;
+	hitPlayerName = hitname;
+	playerName = name;
 
 	laserFrom.push_back(_laserFrom.getX());
 	laserFrom.push_back(_laserFrom.getY());
@@ -127,7 +128,8 @@ Message::Message() {
 
 Message::Message(Message& other) : ship(other.ship) {
 	msgType = other.msgType;
-	chatMessage = other.chatMessage;
+	playerName = other.playerName;
+	hitPlayerName = other.hitPlayerName;
 	laserFrom = other.laserFrom;
 	laserTo = other.laserTo;
 	wpnType = other.wpnType;
@@ -138,7 +140,8 @@ Message::Message(Message& other) : ship(other.ship) {
 Message& Message::operator= (Message& other) {
 	ship = other.ship;
 	msgType = other.msgType;
-	chatMessage = other.chatMessage;
+	playerName = other.playerName;
+	hitPlayerName = other.hitPlayerName;
 	laserFrom = other.laserFrom;
 	laserTo = other.laserTo;
 	wpnType = other.wpnType;
@@ -151,7 +154,7 @@ Message& Message::operator= (Message& other) {
 void Message::setData(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-	std::string ip /*= ""*/ , unsigned short port /*= 0,*/ , std::string chatmsg /*= ""*/ , std::string worldfile /*= ""*/) {
+	std::string ip /*= ""*/ , unsigned short port /*= 0,*/ , std::string hitname /*= ""*/ , std::string name /*= ""*/) {
 	
 	ship.setData(h, am, t, velo, avelo , _t);
 	
@@ -160,8 +163,8 @@ void Message::setData(int prot ,
 	
 	newConnectorIP = ip;
 	newConnectorPort = port;
-	chatMessage = chatmsg;
-	worldData = worldfile;
+	hitPlayerName = hitname;
+	hitPlayerName = name;
 
 	laserFrom.clear();
 	laserFrom.push_back(_laserFrom.getX());
@@ -195,6 +198,19 @@ void Message::setData( int prot , State* state , Weapon* wpn ) {
 	return;
 }
 
+void Message::setData(btVector3& _laserFrom, btVector3& _laserTo) {
+	laserFrom.clear();
+	laserFrom.push_back(_laserFrom.getX());
+	laserFrom.push_back(_laserFrom.getY());
+	laserFrom.push_back(_laserFrom.getZ());
+
+	laserTo.clear();
+	laserTo.push_back(_laserTo.getX());
+	laserTo.push_back(_laserTo.getY());
+	laserTo.push_back(_laserTo.getZ());
+
+}
+
 void Message::getData(btVector3& _laserFrom, btVector3& _laserTo) {
 	_laserFrom.setX(laserFrom[0]);
 	_laserTo.setX(laserTo[0]);
@@ -207,7 +223,7 @@ void Message::getData(btVector3& _laserFrom, btVector3& _laserTo) {
 void Message::getData(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-	std::string& ip, unsigned short port, std::string& chatmsg, std::string& worldfile) {
+	std::string& ip, unsigned short port, std::string& hitname, std::string& name) {
 	
 	prot = msgType;
 	_wpnType = wpnType;
@@ -215,8 +231,8 @@ void Message::getData(int prot ,
 	ip = newConnectorIP;
 	port = newConnectorPort;
 	
-	worldfile = worldData;
-	chatmsg = chatMessage;
+	name = playerName;
+	hitname = hitPlayerName;
 	
 	ship.getData(h, am, t, velo, avelo , _t);
 

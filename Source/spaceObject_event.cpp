@@ -171,10 +171,13 @@ void SpaceObject::fire_laser() {
 		to = ((SpaceObject*)rayCallback.m_collisionObject->getUserPointer())->getRigidBody()->getCenterOfMassPosition();
 	} //else, do nothing.
 	weapons[activeWeapon] -> fireProjectile(from,to);
+	fireFrom = from;
+	fireTo = to;
+	fired = true;
 }
 
 void SpaceObject::hit_by_laser() {
-	std::cout << "i was hit by a laser. ";
+	wasHit = true;
 }
 
 #endif

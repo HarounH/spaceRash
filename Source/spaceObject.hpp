@@ -54,6 +54,12 @@ public:
 	/* actions that the spaceobject can do .*/
 	void fire_laser();
 	void hit_by_laser();
+	btVector3 laser_from() { return fireFrom; }
+	btVector3 laser_to() { return fireTo; }
+	bool didHit() { return wasHit; }
+	void didHit(bool _wasHit) { wasHit = _wasHit; }
+	bool didFire() { return fired; }
+	void didFire(bool _fired) { fired = _fired; }
 
 	/* physics things that we must implement using quaternions and the sort. */
 	void accelerate();
@@ -80,6 +86,9 @@ private:
 	std::string phypath;
 	int health;
 	bool wasHit;
+	bool fired;
+	btVector3 fireFrom;
+	btVector3 fireTo;
 	btScalar maxVelocity;
 	btScalar scalingAcceleration;
 	btScalar scalingOmega;

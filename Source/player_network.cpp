@@ -40,6 +40,19 @@ void Player::setGeneralData() {
 	myMessage->msgType = (int) GENDATA;
 	myMessage->newConnectorIP = network->getMyIP();
 	myMessage->newConnectorPort = network->getMyPort();
+	if(fighter->didFire())
+	{
+		myMessage->msgType = myMessage->msgType | ((int) LASERDATA);
+		myMessage->wpnType = fighter->getType();
+		btVector3 to = fighter->laser_to();
+		btVector3 from = fighter->laser_from();
+		myMessage->setData(from, to);
+		if(fighter->didHit())
+		{
+			fighter->didHit(false);
+		}
+		fighter->didFire(false);
+	}
 	sendMessage();
 }
 
