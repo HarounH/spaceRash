@@ -18,7 +18,16 @@ void Player::handleMessage(Message msg, int network_int) {
 				//add this spaceObject to list of objects
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				iplist.push_back(make_pair(msg.newConnectorIP, msg.newConnectorPort));
+
+				btVector3 np(0, 0, 0);
+				getNextValidPosition(np);
+				btTransform yourTrans;
+				yourTrans.setIdentity();
+				yourTrans.setOrigin(np);
+
 				newObject->init(bulletWorld);
+				newObject->getRigidBody()->setWorldTransform(yourTrans);
+
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
 					addtoNtoP(nextClientId, nextPlayerId);
@@ -46,11 +55,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				/* Next part, i tell everyone what the new kid's location should be. */
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
-				btVector3 np(0, 0, 0);
-				getNextValidPosition(np);
-				btTransform yourTrans;
-				yourTrans.setIdentity();
-				yourTrans.setOrigin(np);
+				
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
 

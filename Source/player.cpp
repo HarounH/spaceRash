@@ -182,7 +182,8 @@ void Player::removeFromEveryone(SpaceObject* obj) {
 }
 
 void Player::removeFromEveryone(long long deadClientId) {
-	//TODO
+	SpaceObject *obj = which_spaceObject(deadClientId);
+	removeFromEveryone(obj);
 }
 
 SpaceObject* Player::which_spaceObject(int network_int){

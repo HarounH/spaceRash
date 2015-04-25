@@ -192,8 +192,8 @@ int main(int argc, char** argv) {
         if ( deadclientid == -1 ) {
             //no body dropped.
         } else {
-            //TODO remove that body Haroun
-            //removeFromEveryone(deadclientid);
+            usr->removeFromEveryone(deadclientid);
+
         }
 
 
@@ -270,7 +270,7 @@ int main(int argc, char** argv) {
                 usr->setGeneralData();
                 for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
                     usr->receiveMessage();
-            } 
+            }
             ctr = (ctr+1)%TICKS ;
         }
         dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;

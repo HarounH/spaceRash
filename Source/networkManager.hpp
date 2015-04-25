@@ -37,7 +37,6 @@ class NetworkManager{
 
 
 		unordered_map<long long,int> timeLeft; //
-		unordered_map<long long, bool> has_dropped;   
 		std::array<char, NETWORK_BUFFER_SIZE> recv_buffer;  // statically allocated container class used as a buffer for receiving data
 
 		// SERVER machinery
@@ -45,7 +44,7 @@ class NetworkManager{
 		long long nextClientID;
 		ClientList clients;
 
-		double time_out = 5;
+		double time_out = 3;
 
 		// DATA
 		unsigned long long receivedMessages;
