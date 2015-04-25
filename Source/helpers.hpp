@@ -85,11 +85,11 @@ struct BulletWorld {
 		dynamicsWorld->setGravity(btVector3(0,0,0));
     }
     ~BulletWorld() {
+		    delete dynamicsWorld;
 		    delete solver;
 		    delete collisionConfiguration;
 		    delete dispatcher;
 		    delete broadphase;
-		    delete dynamicsWorld;
     }
 };
 

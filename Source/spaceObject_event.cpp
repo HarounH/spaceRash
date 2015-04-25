@@ -163,7 +163,7 @@ void SpaceObject::fire_laser() {
 		return;
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
-	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-5));
+	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-10));
 	std::cout << body->getOrientation().getX() << "," << body->getOrientation().getY() << "," << body->getOrientation().getZ() << "," << body->getOrientation().getW() << "\n";
 	btVector3 to = from + quatRotate(trans.getRotation() , btVector3(0,0,-500));
 		

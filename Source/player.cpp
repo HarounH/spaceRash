@@ -33,7 +33,14 @@ Player::~Player() {
 	delete network;
 	delete skybox;
 	allObjects = NULL;
-	//delete bulletWorld; //TODO
+	for ( spaceObjWeed::const_iterator obj_iterator = EveryOne.begin()
+			; obj_iterator != EveryOne.end()
+			; ++obj_iterator) {
+			//--------------------------------
+			bulletWorld->dynamicsWorld->removeRigidBody(obj_iterator->right->getRigidBody());
+			delete obj_iterator->right;
+		}
+	delete bulletWorld; //TODO
 }
 void Player::init_bulletWorld() {
 	bulletWorld = new BulletWorld();
@@ -137,8 +144,6 @@ void Player::toggle_camera(double x, double y) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	// gluLookAt(0,7.5,10, 0,0,0, 0,1.0,0);
-	cout << fighter->cameras[camera_idx].first.getX() << "," << fighter->cameras[camera_idx].first.getY() << "," << fighter->cameras[camera_idx].first.getZ() << "," <<   
-		fighter->cameras[camera_idx].second.getX() << "," << fighter->cameras[camera_idx].second.getY() << "," << fighter->cameras[camera_idx].second.getZ()   << "\n";
 	/*gluLookAt( 0.0,0.0,5.0,
         0.0,0.0,0.0,
     	0,1.0,0);*/
