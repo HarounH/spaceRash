@@ -30,6 +30,7 @@ void Player::handleMessage(Message msg, int network_int) {
 
 				if( add_object(newObject) ) {
 					int nextPlayerId = getID(newObject);
+					cout << nextPlayerId << "\n";
 					addtoNtoP(nextClientId, nextPlayerId);
 					cout << "added.\n";
 					addtoNametoP(msg.playerName, nextPlayerId);
@@ -48,7 +49,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				(myMessage->ship).transform.assign(temp , temp + 15);
 				cout << "1. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				myMessage->AInumbers = numAIs;
-				myMessage->AIname = settings->name;
+				myMessage->AIname = nameAI;
 				sendMessage();
 
 				/* ^ That part sends my IP address and position to everybody, but is really only meant for the new connector. */
@@ -57,7 +58,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
 				myMessage->AInumbers = numAIs;
-				myMessage->AIname = settings->name;
+				myMessage->AIname = nameAI;
 				
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
@@ -73,11 +74,15 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
-					auto pit = NameToP.right.find(alreadyExistingID);
-					if(pit != NameToP.right.end())
-						myMessage->playerName = pit->second;
-					else
-						cout << "Something's not right here\n";
+					auto playerit = NtoP.left.find(alreadyExistingID);
+					if(playerit != NtoP.left.end())
+					{
+						auto pit = NameToP.right.find(playerit->second);
+						if(pit != NameToP.right.end())
+							myMessage->playerName = pit->second;
+						else
+							cout << "Something's not right here\n";
+					}
 					myMessage->AInumbers = numAIs;
 					myMessage->AIname = nameAI;
 					sendMessage();
@@ -146,11 +151,15 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
-					auto pit = NameToP.right.find(alreadyExistingID);
-					if(pit != NameToP.right.end())
-						myMessage->playerName = pit->second;
-					else
-						cout << "Something's not right here\n";
+					auto playerit = NtoP.left.find(alreadyExistingID);
+					if(playerit != NtoP.left.end())
+					{
+						auto pit = NameToP.right.find(playerit->second);
+						if(pit != NameToP.right.end())
+							myMessage->playerName = pit->second;
+						else
+							cout << "Something's not right here\n";
+					}
 					myMessage->AInumbers = numAIs;
 					myMessage->AIname = nameAI;
 					sendMessage();
@@ -207,11 +216,15 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
-					auto pit = NameToP.right.find(alreadyExistingID);
-					if(pit != NameToP.right.end())
-						myMessage->playerName = pit->second;
-					else
-						cout << "Something's not right here\n";
+					auto playerit = NtoP.left.find(alreadyExistingID);
+					if(playerit != NtoP.left.end())
+					{
+						auto pit = NameToP.right.find(playerit->second);
+						if(pit != NameToP.right.end())
+							myMessage->playerName = pit->second;
+						else
+							cout << "Something's not right here\n";
+					}
 					myMessage->AInumbers = numAIs;
 					myMessage->AIname = nameAI;
 					sendMessage();
@@ -322,7 +335,7 @@ void Player::handleMessage(Message msg, int network_int) {
 		SpaceObject* obj = which_spaceObject(msg.playerName); //TODO: Change to player name
 		if(obj != nullptr)
 		{
-
+			fighter->setHealth(0);
 		}
 	}
 }

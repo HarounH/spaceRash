@@ -186,9 +186,9 @@ void Player::removeFromEveryone(SpaceObject* obj) {
 	auto it = EveryOne.right.find(obj);
 	if (it != EveryOne.right.end()) {
 		EveryOne.right.erase(it);
+		bulletWorld->dynamicsWorld->removeRigidBody(obj->getRigidBody());
+		delete obj;
 	}
-	bulletWorld->dynamicsWorld->removeRigidBody(obj->getRigidBody());
-	delete obj;
 }
 
 void Player::removeFromEveryone(long long deadClientId) {
