@@ -188,7 +188,18 @@ int main(int argc, char** argv) {
     deadmsgflag = false;
     winmsgflag = false;
     activenet = true;//INV: Send and recv messages while activenet.
-    cout << "I'm about to start the main loop\n";
+
+    sf::Font jedifont;
+    
+    if (!jedifont.loadFromFile(FONT_FILE)) {
+        cout << "error loading jedifont\n";
+    }
+    sf::Text wintext;
+    wintext.setString(L"Well done, young padawam");
+    wintext.setColor(sf::Color::Red);
+    wintext.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
     while (running)
     {       
         //detect drops.
@@ -226,6 +237,7 @@ int main(int argc, char** argv) {
                 deadmsgflag = true;
                 activenet = false;
             } else if ( usr->getHasReachedGoal()) {
+                    window.draw(wintext);
                 //If i reach handle victory.
                 if((!winmsgflag)){
                     usr->sendWinMessage();
