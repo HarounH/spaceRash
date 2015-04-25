@@ -23,7 +23,7 @@ void SpaceObject::makeMessage(State*& state,  Message*& msg) {
 }
 
 void SpaceObject::handleCollision(SpaceObject* other) {
-	wasHit = true;
+	
 	//---------TODO Need to scale damage down---------//
 	health -=50;
 	if(health<0)
