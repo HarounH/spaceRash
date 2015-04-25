@@ -35,13 +35,27 @@ void Player::create_AIs() {
 	for (int i = 0; i < numAIs; i++){
 		SpaceObject* AI_object = new SpaceObject(XWING);
 		cout << "HERE" << "\n";
+		
+		btTransform yourTrans;
+		yourTrans.setIdentity();
+		yourTrans.setOrigin(valid_spawn[i]);
+		AI_object->init(bulletWorld);
+		AI_object->getRigidBody()->setWorldTransform(yourTrans);
+
+		cout << "HERE" << "\n";
 		add_object(AI_object);
 		cout << "HERE" << "\n";
-		AI_object->init(bulletWorld);
-		cout << "HERE" << "\n";
-		btVector3 dummy(0,0,0);
-		cout << "HERE " << '\n';
-		AI_players[i] = new AI_player(AI_object, bulletWorld,dummy );
+		string thisAIName = nameAI;
+		string add = to_string(i);
+		thisAIName += add;
+
+		if( add_object(AI_object) ) {
+			int nextPlayerId = getID(AI_object);
+			cout << "added.\n";
+			addtoNametoP(thisAIName, nextPlayerId);
+		}
+
+		AI_players[i] = new AI_player(AI_object, bulletWorld, valid_spawn[i], thisAIName);
 	}
 		
 }
