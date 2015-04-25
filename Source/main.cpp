@@ -10,7 +10,7 @@ using namespace std;
 #include "helpers.hpp"
 #include "ObjManager.hpp"
 #include "HUD.hpp"
-#define TICKS 10
+#define TICKS 20
 
 using namespace std;
 void lettherebelight() {

@@ -100,7 +100,7 @@ void Player::handleMessage(Message msg, int network_int) {
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
 				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				// sendMessageToClient(nextClientId);
 
@@ -151,7 +151,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				// sendMessageToClient(client_id);
@@ -181,11 +181,11 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 
 			}
-			else
-			{
-				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(network_int);
-			}
+			// else
+			// {
+			// 	myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+			// 	sendMessageToClient(network_int);
+			// }
 		}
 		else if(!hasSetInitialPosition)
 		{
@@ -196,7 +196,7 @@ void Player::handleMessage(Message msg, int network_int) {
 			}
 			t.setFromOpenGLMatrix(temp);
 			fighter->getRigidBody()->setWorldTransform(t);
-			bulletWorld->dynamicsWorld->stepSimulation(0.00001f);
+			bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 			hasSetInitialPosition = true;
 			cout << "4. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 			// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
@@ -234,7 +234,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 
 				newObject->getRigidBody()->setWorldTransform(t);
-				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
+				bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());

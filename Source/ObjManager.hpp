@@ -14,8 +14,9 @@ public:
 	void drawEndpoint(btVector3 dim);
 	~ObjManager(){
 		for(int i=0;i<mBuildingTextures.size();++i){
-			delete mBuildingTextures[i];
+			if(!(!(mBuildingTextures[i]))) { delete mBuildingTextures[i]; }
 			delete mBuildingImages[i];
+			delete allObjects[i];
 		}
 	}
 };

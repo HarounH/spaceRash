@@ -33,6 +33,7 @@ void Player::connectToNetwork(string IP, unsigned short server_port, string loca
 	network = new NetworkManager(IP, server_port, local_ip, local_port);
 	string t = "connectDummy";
 	sendMessage(t);
+	iplist.push_back(make_pair(IP, server_port));
 	myMessage->setData((int)CONNECTDATA, local_ip, local_port);
 	myMessage->ship.objType = fighter->getType();
 	myMessage->playerName = settings->name;
