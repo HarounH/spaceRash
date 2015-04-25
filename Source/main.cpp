@@ -213,16 +213,20 @@ int main(int argc, char** argv) {
             if( sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 running = false;
             }
-            if (usr->getIsDead() && !(deadmsgflag)) { //handle death.
+            if (usr->getIsDead() ) { //handle death.
 
                 usr->getFighter()->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));
                 //I die, then i broadcast my message.
+                if(!(deadmsgflag)){
                 usr->sendDeathMessage();
+                }   
                 deadmsgflag = true;
                 activenet = false;
-            } else if ( usr->getHasReachedGoal() && (!winmsgflag)) {
+            } else if ( usr->getHasReachedGoal()) {
                 //If i reach handle victory.
-                usr->sendWinMessage();
+                if((!winmsgflag)){
+                    usr->sendWinMessage();
+                }
                 winmsgflag = true;
                 activenet = false;
             } else {

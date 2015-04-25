@@ -127,8 +127,8 @@ void Weapon::drawProjectile(btVector3& from, btVector3& to) {
 
 	glColor3f( currentColor[0] , currentColor[1] , currentColor[2] );
 
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_LIGHTING);
 
 }
 
