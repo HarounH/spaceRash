@@ -79,7 +79,7 @@ void Player::handleMessage(Message msg, int network_int) {
 					else
 						cout << "Something's not right here\n";
 					myMessage->AInumbers = numAIs;
-					myMessage->AIname = settings->name;
+					myMessage->AIname = nameAI;
 					sendMessage();
 				}
 
@@ -213,7 +213,7 @@ void Player::handleMessage(Message msg, int network_int) {
 					else
 						cout << "Something's not right here\n";
 					myMessage->AInumbers = numAIs;
-					myMessage->AIname = settings->name;
+					myMessage->AIname = nameAI;
 					sendMessage();
 				}
 
