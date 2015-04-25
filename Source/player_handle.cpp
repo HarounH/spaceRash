@@ -10,8 +10,10 @@ void Player::handleMessage(Message msg, int network_int) {
 		if(network->getMyIP() != msg.newConnectorIP) { 
 			//check if this client corresponding to this IP and port already exists
 			long long client_id = network->get_client_id(msg.newConnectorIP, msg.newConnectorPort);
-			if(client_id == -1) {
+			if(client_id == -1) { //client is not present in the network. Add him and tell the others.
 				//if not found then add to list of clients
+
+				/* Begin addition part. */
 				int nextClientId = network->addClient(msg.newConnectorIP, msg.newConnectorPort);
 				//add this spaceObject to list of objects
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
@@ -23,10 +25,15 @@ void Player::handleMessage(Message msg, int network_int) {
 					cout << "added.\n";
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
+				
+				//TODO: Insert couts to check whats up.
+
+
 				//send this message to everyone else
 				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				// sendMessageToClient(nextClientId);
 
+				/* Send over your data. */
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				float temp[16];
@@ -36,6 +43,9 @@ void Player::handleMessage(Message msg, int network_int) {
 				
 				sendMessage();
 
+				/* ^ That part sends my IP address and position to everybody, but is really only meant for the new connector. */
+
+				/* Next part, i tell everyone what the new kid's location should be. */
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
 				myMessage->playerName = settings->name;
@@ -46,13 +56,21 @@ void Player::handleMessage(Message msg, int network_int) {
 				yourTrans.setOrigin(np);
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
+				sendMessage();
+
 				for(auto it = iplist.begin(); it != iplist.end(); it++)
 				{
+					long long alreadyExistingID = network->get_client_id(it->first, it->second);
+					SpaceObject* correspondingObject = which_spaceObject(alreadyExistingID);
+					btTransform correspondingTrans = correspondingObject->getRigidBody()->getWorldTransform();
+					float temp2[16];
+					correspondingTrans.getOpenGLMatrix(temp2);
+					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
 					sendMessage();
 				}
 
-				numPlayers--;
+				numPlayers--; //TODO : WHY?
 			}
 		}
 	}
@@ -83,8 +101,8 @@ void Player::handleMessage(Message msg, int network_int) {
 				}
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
-				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(nextClientId);
+				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+				// sendMessageToClient(nextClientId);
 
 				//send this message to everyone else
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
@@ -99,8 +117,16 @@ void Player::handleMessage(Message msg, int network_int) {
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				*(myMessage) = msg;
 				
+				sendMessage();
+
 				for(auto it = iplist.begin(); it != iplist.end(); it++)
 				{
+					long long alreadyExistingID = network->get_client_id(it->first, it->second);
+					SpaceObject* correspondingObject = which_spaceObject(alreadyExistingID);
+					btTransform correspondingTrans = correspondingObject->getRigidBody()->getWorldTransform();
+					float temp2[16];
+					correspondingTrans.getOpenGLMatrix(temp2);
+					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
 					sendMessage();
 				}
@@ -127,8 +153,8 @@ void Player::handleMessage(Message msg, int network_int) {
 				newObject->getRigidBody()->setWorldTransform(t);
 				bulletWorld->dynamicsWorld->stepSimulation(0.000001f);
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
-				myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-				sendMessageToClient(client_id);
+				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+				// sendMessageToClient(client_id);
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				myMessage->playerName = settings->name;
@@ -139,9 +165,17 @@ void Player::handleMessage(Message msg, int network_int) {
 				sendMessage();
 
 				*(myMessage) = msg;
+
+				sendMessage();
 				
 				for(auto it = iplist.begin(); it != iplist.end(); it++)
 				{
+					long long alreadyExistingID = network->get_client_id(it->first, it->second);
+					SpaceObject* correspondingObject = which_spaceObject(alreadyExistingID);
+					btTransform correspondingTrans = correspondingObject->getRigidBody()->getWorldTransform();
+					float temp2[16];
+					correspondingTrans.getOpenGLMatrix(temp2);
+					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
 					sendMessage();
 				}
@@ -165,8 +199,8 @@ void Player::handleMessage(Message msg, int network_int) {
 			bulletWorld->dynamicsWorld->stepSimulation(0.00001f);
 			hasSetInitialPosition = true;
 			cout << "4. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
-			myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
-			sendMessageToClient(network_int);
+			// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
+			// sendMessageToClient(network_int);
 		}
 	}
 	
@@ -226,7 +260,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	// 	SpaceObject* obj = which_spaceObject(network_int);
 	// 	if(obj != nullptr)
 	// 	{
-	// 		obj->setActiveWeapon(msg.wpnType);
+	// 		obj->setActiveWeapon(msg.wpnType); //cause of segfault.
 	// 		btVector3 laserFrom, laserTo;
 	// 		msg.getData(laserFrom, laserTo);
 	// 		obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);

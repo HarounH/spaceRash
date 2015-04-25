@@ -251,12 +251,12 @@ void Player::getNextValidPosition(btVector3& lv) {
 	if(didStart)
 	{
 		int nextPlayer = (int) NtoP.size() + 1;
-		lv.setY(0);
+		lv.setX(0);
 		lv.setZ(0);
 		if(nextPlayer & 1)
-			lv.setX(((nextPlayer + 1) / 2) * 10);
+			lv.setY(((nextPlayer + 1) / 2) * 10);
 		else
-			lv.setX((nextPlayer / 2) * -10);
+			lv.setY((nextPlayer / 2) * -10);
 	}
 }
 

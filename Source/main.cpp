@@ -131,6 +131,9 @@ int main(int argc, char** argv) {
                     std::string m = "Starting in ";
                     m += to_string(i);
                     waitLabel->SetText(m);
+                    desktop.Update(0.0f);
+                    sfgui.Display(wnd);
+                    wnd.display();
                     usleep(1000000);
                 }
             }
