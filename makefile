@@ -6,6 +6,8 @@ EXE=Executable/
 RSC=Resource/ 
 EXEC=spaceRash.out
 Files=*.o
+DOCUMENT=DocSRC/
+PDF=PDF\ FILES/
 #FOR LINUX
 ifeq ($(UNAME), Linux)
 LIBS= -lpthread -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lboost_system -lboost_thread -lboost_serialization -lsfgui -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lGL -lGLU
@@ -221,4 +223,8 @@ clean:
 	rm $(EXEC) $(OBJ)*
 cleanFiles:
 	rm $(Files) 
+DOC: $(DOCUMENT)Changes.tex
+	pdflatex $<
+	rm Changes.aux Changes.log
+	mv Changes.pdf $(PDF)
 endif
