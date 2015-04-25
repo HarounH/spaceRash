@@ -37,6 +37,7 @@ void Player::readWorld(std::string worldfilepath /*=WORLD_PHY_FNAME*/) {
 			s>>temp2;
 			parts.push_back(temp2);
 		}
+		flag = true;
 		//ASSERT : Done reading vector.
 		OBJECT_TYPE world_obj_type = UFO;
 		if ( line_type == "Endpoint" ) {
@@ -50,15 +51,22 @@ void Player::readWorld(std::string worldfilepath /*=WORLD_PHY_FNAME*/) {
 			world_obj_type = ASTEROID;
 		} else if ( line_type == "Debris" ) {
 			world_obj_type = DEBRIS;
+		} else if (line_type == "AI") {
+			flag = false;
 		}
-		SpaceObject* worldObject = new SpaceObject(world_obj_type);
-		worldObject->init(bulletWorld);
-		worldObject->setPosition( btVector3(parts[0] , parts[1] , parts[2]) );
-		bulletWorld->dynamicsWorld->stepSimulation(1/60000.0);
-		if (world_obj_type==DEBRIS || world_obj_type==ENDPOINT || world_obj_type==SKYRISE_FAT || world_obj_type==SKYRISE_TALL) {
-			worldObject->setStatic();
+		if(flag) {
+			SpaceObject* worldObject = new SpaceObject(world_obj_type);
+			worldObject->init(bulletWorld);
+			worldObject->setPosition( btVector3(parts[0] , parts[1] , parts[2]) );
+			bulletWorld->dynamicsWorld->stepSimulation(1/60000.0);
+			if (world_obj_type==DEBRIS || world_obj_type==ENDPOINT || world_obj_type==SKYRISE_FAT || world_obj_type==SKYRISE_TALL) {
+				worldObject->setStatic();
+			}
+			add_object(worldObject); //pushes back a copy of the space object. i wonder if that matters.
+		} else {
+			//its an AI player, put him into a vector for akshay.
+			valid_spawn.push_back(btVector3(parts[0],parts[1],parts[2]));
 		}
-		add_object(worldObject); //pushes back a copy of the space object. i wonder if that matters.
 		++nline;
 	}
 	f.close();
