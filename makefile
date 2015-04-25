@@ -105,7 +105,7 @@ execute: $(EXEC)
 	./$<
 
 clean:
-	rm $(EXEC) *.tang $(OBJ)*
+	rm $(EXEC) $(OBJ)*
 cleanFiles:
 	rm $(Files) 
 endif
@@ -209,7 +209,7 @@ execute: $(EXEC)
 	./$<
 
 clean:
-	rm $(EXEC) *.tang $(OBJ)*
+	rm $(EXEC) $(OBJ)*
 cleanFiles:
 	rm $(Files) 
 endif

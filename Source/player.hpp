@@ -138,6 +138,7 @@ public:
 	OBJECT_TYPE 	getFighterType();
 	SpaceObject*	getSpaceObject(int); 
 	int 			getID(SpaceObject*);
+	bool 			getIsDead();
 	void 			readWorld(std::string wp);
 	void getWindowSize(double & x, double & y);
 	/** debuggers */

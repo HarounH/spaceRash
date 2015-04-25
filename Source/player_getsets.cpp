@@ -30,4 +30,8 @@ void Player::getWindowSize(double &x,double &y){
 	x = halfWindowSizeX ;
 	y = halfWindowSizeY;
 }
+
+bool Player::getIsDead() {
+	return isDead;
+}
 #endif

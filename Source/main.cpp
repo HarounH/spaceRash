@@ -196,7 +196,12 @@ int main(int argc, char** argv) {
             if( sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 running = false;
             }
-            usr->handle_event(event,window);
+            if (usr->getIsDead()) {
+                usr->getFighter()->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));   
+            } 
+            else { 
+                usr->handle_event(event,window);
+            }
         }
         usr->resetMouse(window);
         // clear the buffers

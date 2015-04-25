@@ -15,10 +15,6 @@ void Player::handle_event(sf::Event& event,sf::Window& window) {
 	/*
 		Follows the model of : keyboard, mouse.
 	*/
-		if(isDead){
-			fighter->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));
-			return;
-		}
 	//Rotational
 	double tx = sf::Mouse::getPosition(window).x;
     double ty = sf::Mouse::getPosition(window).y;

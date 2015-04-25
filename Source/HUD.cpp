@@ -6,12 +6,18 @@
 //initialize this just before the main loop.
 void HUD::init(Player* _usrptr, sf::RenderWindow& wnd) {
 	usrptr = _usrptr;
+	
 	if (!font.loadFromFile(FONT_FILE)) {
 		cout << "error loading font\n";
-	} 
+	}
 	hna.setFont(font);
     hna.setColor(sf::Color::Red);
     hna.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+	deathText.setFont(font);
+	deathText.setColor(sf::Color::Yellow);
+	deathText.setStyle(sf::Text::Bold);
+	deathText.setString(L"Failed you have, young padawan.");
 
 	if (!crosshairimg.loadFromFile(CROSSHAIRIMG_FILE)) {
 		cout << "error loading crosshair-img\n";
@@ -68,7 +74,7 @@ void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	health.setPosition(sf::Vector2f(offset_health,health.getPosition().y));
 	health.setSize(sf::Vector2f((float)refer->getHealth()/1000.0*ammoBarSize,2.0f));
 	
-
+	deathText.setPosition(sf::Vector2f(0.1*wnd.getSize().x , 0.1*wnd.getSize().y));
 	ammobar.setPosition(sf::Vector2f(offset_ammo,ammobar.getPosition().y));
 	
 	ammobar.setSize(sf::Vector2f(float(refer->getActiveWeapon()->ammo)/5000.0*ammoBarSize,2.0f));
@@ -131,7 +137,9 @@ void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	ep.setPosition( map.getPosition().x + 45 + mX , map.getPosition().y +45 + mY);
 	wnd.draw(ammobar);
 	wnd.draw(health);
-
+	if ( !(refer->getHealth()>0) ) {
+		wnd.draw(deathText);
+	}
 	wnd.draw(map);
 	wnd.draw(ep);
 	wnd.popGLStates();

@@ -6,12 +6,14 @@
 #include "spaceObject.hpp"
 
 const std::string CROSSHAIRIMG_FILE = "Resource/crosshair.png";
-const std::string FONT_FILE = "Resource/arial.ttf";
+const std::string FONT_FILE = "Resource/Starjedi.ttf";
 
 struct HUD {
 	Player* usrptr;
 	sf::Font font;
 	sf::Text hna;
+	sf::Text deathText;
+	sf::Text winText;
 	sf::Image crosshairimg;
 	sf::Texture crosshairtex;
 	sf::Sprite crosshair;
