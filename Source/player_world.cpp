@@ -5,7 +5,7 @@
 
 /*
 	World format:
-	skybox_size SKYBOX_IMG
+	skybox_size SKYBOX_IMG maxheight
 	Endpoint x,y,z
 	SkyriseTall x,y,z
 	SkyriseFat x,y,z
@@ -22,7 +22,7 @@ void Player::readWorld(std::string worldfilepath /*=WORLD_PHY_FNAME*/) {
 
 	string line1; getline(f,line1);
 	std::istringstream lin1(line1);
-	lin1 >> skybox_size >> SKYBOX_IMG;
+	lin1 >> skybox_size >> SKYBOX_IMG >> maxHeightWithoutDamage;
 	//Now, to do getlines until over.
 	string line="";
 	int nline=0;

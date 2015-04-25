@@ -57,7 +57,8 @@ private:
 	float skybox_size;
 	double halfWindowSizeX;
 	double halfWindowSizeY;
-
+	bool isDead;
+	float maxHeightWithoutDamage;
 	UserSettings* settings;
 	int camera_idx;
 public:

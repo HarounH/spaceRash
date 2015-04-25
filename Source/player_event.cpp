@@ -9,9 +9,16 @@ void Player::handle_event(sf::Event& event,sf::Window& window) {
 	sf::Keyboard::Key key;
 	bool collision, laser;
 	rotatePressed = false;
+	float currHeight = fighter->getRigidBody()->getCenterOfMassPosition().getY();
+	if(currHeight> maxHeightWithoutDamage)
+		fighter->setHealth((fighter->getHealth()-1>=0?fighter->getHealth()-3:0));
 	/*
 		Follows the model of : keyboard, mouse.
 	*/
+		if(isDead){
+			fighter->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));
+			return;
+		}
 	//Rotational
 	double tx = sf::Mouse::getPosition(window).x;
     double ty = sf::Mouse::getPosition(window).y;

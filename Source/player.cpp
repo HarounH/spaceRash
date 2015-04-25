@@ -19,6 +19,7 @@ Player::Player(ObjManager* mObjManager) {
 	camera_idx = 0;
 	didStart = false;
 	startGame = false;
+	isDead = false;
 	numPlayers = 0;
 	numAIs = 0;
 	hasSetInitialPosition = false;
@@ -82,6 +83,9 @@ void Player::playMusic(bool dflag){
     
 }
 void Player::update_state(double dt) {
+	if(fighter->getHealth()<=0){
+		isDead = true;
+	}
 }
 
 void Player::render_state(double dt) {
