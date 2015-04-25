@@ -172,6 +172,19 @@ bool Player::add_object(SpaceObject*& OBJ){
 		return false;
 }
 
+void Player::removeFromEveryone(SpaceObject* obj) {
+	auto it = EveryOne.right.find(obj);
+	if (it != EveryOne.right.end()) {
+		EveryOne.right.erase(it);
+	}
+	bulletWorld->dynamicsWorld->removeRigidBody(obj->getRigidBody());
+	delete obj;
+}
+
+void Player::removeFromEveryone(long long deadClientId) {
+	//TODO
+}
+
 SpaceObject* Player::which_spaceObject(int network_int){
 	// if present,return
 	auto cit = NtoP.left.find(network_int);
@@ -213,12 +226,10 @@ string Player::which_player_name(SpaceObject* obj) {
 }
 
 bool Player::addtoNtoP(int network_int, int player_int) {
-	//TODO: add the pair of network_int and player_int to the bimap.
 	return NtoP.insert(NtoPTypeNormal(network_int,player_int)).second;
 }
 
 bool Player::addtoNametoP(string playerName, int player_int) {
-	//TODO: add the pair of network_int and player_int to the bimap.
 	return NameToP.insert(NametoPTypeNormal(playerName,player_int)).second;
 }
 

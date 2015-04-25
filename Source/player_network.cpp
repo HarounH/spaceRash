@@ -84,6 +84,20 @@ void Player::sendMessageToClient(long long client_id) {
 	network->SendToClient(message, client_id);
 }
 
+void Player::sendDeathMessage() {
+	myMessage->playerName = settings->name;
+	myMessage->setData((int)DIEDATA, network->getMyIP(), network->getMyPort());
+	for(int i = 0; i < 5; i++)
+		sendMessage();
+}
+
+void Player::sendWinMessage() {
+	myMessage->playerName = settings->name;
+	myMessage->setData((int)WINDATA, network->getMyIP(), network->getMyPort());
+	for(int i = 0; i < 5; i++)
+		sendMessage();
+}
+
 void Player::translateMessage(ClientMessage inMessage) {
 	Message message;
 	std::istringstream archive_stream(inMessage.first);

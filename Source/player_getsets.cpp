@@ -34,4 +34,14 @@ void Player::getWindowSize(double &x,double &y){
 bool Player::getIsDead() {
 	return isDead;
 }
+
+bool Player::getHasReachedGoal() {
+	btVector3 check = fighter->getRigidBody()->getCenterOfMassPosition();
+	check.setY(0);
+	if ( (check-goalPos).length2() < 2500 ){
+		return true;
+	} else {
+		return false;
+	}
+}
 #endif

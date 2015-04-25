@@ -41,6 +41,7 @@ void Player::readWorld(std::string worldfilepath /*=WORLD_PHY_FNAME*/) {
 		OBJECT_TYPE world_obj_type = UFO;
 		if ( line_type == "Endpoint" ) {
 			world_obj_type = ENDPOINT;
+			goalPos = btVector3(parts[0],0,parts[2]); //set the goal position. 
 		} else if ( line_type == "SkyriseTall" ) {
 			world_obj_type = SKYRISE_TALL;
 		} else if ( line_type == "SkyriseFat" ) {

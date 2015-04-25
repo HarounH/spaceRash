@@ -171,6 +171,7 @@ int main(int argc, char** argv) {
     //Player* usr2 = new Player();
     
 
+    long long deadclientid ;
     // SpaceObject* otr = new SpaceObject(TIE);
     // otr->init(usr->getBulletWorld());
     // otr->getRigidBody()->translate(btVector3(0,0,-10));
@@ -178,8 +179,24 @@ int main(int argc, char** argv) {
     double dt1;
     double dt2;
     int ctr=0;
+    bool deadmsgflag, winmsgflag, activenet;
+    deadmsgflag = false;
+    winmsgflag = false;
+    activenet = true;//INV: Send and recv messages while activenet.
+
     while (running)
     {
+        
+        //detect drops.
+        deadclientid = usr->getNetwork()->detectDeath();
+        if ( deadclientid == -1 ) {
+            //no body dropped.
+        } else {
+            //TODO remove that body Haroun
+            //removeFromEveryone(deadclientid);
+        }
+
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -196,17 +213,35 @@ int main(int argc, char** argv) {
             if( sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 running = false;
             }
-            if (usr->getIsDead()) {
-                usr->getFighter()->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));   
-            } 
-            else { 
+            if (usr->getIsDead() && !(deadmsgflag)) { //handle death.
+
+                usr->getFighter()->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));
+                //I die, then i broadcast my message.
+                usr->sendDeathMessage();
+                deadmsgflag = true;
+                activenet = false;
+            } else if ( usr->getHasReachedGoal() && (!winmsgflag)) {
+                //If i reach handle victory.
+                usr->sendWinMessage();
+                winmsgflag = true;
+                activenet = false;
+            } else {
                 usr->handle_event(event,window);
             }
         }
+        
+        if ( deadmsgflag ) {
+            usr->getFighter()->getRigidBody()->setLinearVelocity(btVector3(0,-100,0));
+        }
+
         usr->resetMouse(window);
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //---------------------------------------------//
+        
+
+
+
         usr->update_state(dt);
         
         usr->render_state(dt);
@@ -226,13 +261,14 @@ int main(int argc, char** argv) {
         //usr->getFighter()->render(true);
         // end the current frame (internally swaps the front and back buffers)
         window.display();
-        if ( ctr%TICKS==0 ) {
-            usr->setGeneralData();
-            for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
-                usr->receiveMessage();
-        } 
-        ctr = (ctr+1)%TICKS ;
-        
+        if ( activenet ) {
+            if ( ctr%TICKS==0 ) {
+                usr->setGeneralData();
+                for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
+                    usr->receiveMessage();
+            } 
+            ctr = (ctr+1)%TICKS ;
+        }
         dt1 = ((double)(clock() - dt1))/CLOCKS_PER_SEC;
         dt2 = dt1;
         int sleep = (15000) - (dt1 * 1000000);

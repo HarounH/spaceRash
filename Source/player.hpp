@@ -32,6 +32,8 @@ private:
 	int numPlayers;
 	bool startGame;
 
+	btVector3 goalPos, goalDim;
+	
 	bool rotatePressed;
 	int nextSpaceObjId;
 	OBJECT_TYPE fighterType;
@@ -119,13 +121,17 @@ public:
 	void sendMessage();
 	void sendMessage(std::string);
 	void sendMessageToClient(long long);
+	void sendDeathMessage();
+	void sendWinMessage();
 	void translateMessage(ClientMessage);
 	void receiveMessage();
 	void handleMessage(Message, int);
 	void resetMouse(sf::Window&);
-	//TODO : addSpaceObjectToWorld( cool-network-struct )
+
 	bool addToEveryOne(int,SpaceObject*&); //------------PASS THE SPACE OBJ AFTER INSTANTIATING IT----------//
 	bool add_object(SpaceObject*&); //------------PASS THE SPACE OBJ AFTER INSTANTIATING IT----------//
+	void removeFromEveryone(SpaceObject*);
+	void removeFromEveryone(long long);
 	void getNextValidPosition(btVector3&); //------The player who starts the game requires this function----//
 
 	void fire_laser();
@@ -139,6 +145,7 @@ public:
 	SpaceObject*	getSpaceObject(int); 
 	int 			getID(SpaceObject*);
 	bool 			getIsDead();
+	bool 			getHasReachedGoal();
 	void 			readWorld(std::string wp);
 	void getWindowSize(double & x, double & y);
 	/** debuggers */

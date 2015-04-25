@@ -13,7 +13,7 @@ struct HUD {
 	sf::Font font;
 	sf::Text hna;
 	sf::Text deathText;
-	sf::Text winText;
+	
 	sf::Image crosshairimg;
 	sf::Texture crosshairtex;
 	sf::Sprite crosshair;
