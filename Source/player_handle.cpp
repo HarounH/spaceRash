@@ -25,9 +25,6 @@ void Player::handleMessage(Message msg, int network_int) {
 					cout << "added.\n";
 					addtoNametoP(msg.playerName, nextPlayerId);
 				}
-				
-				//TODO: Insert couts to check whats up.
-
 
 				//send this message to everyone else
 				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
@@ -222,7 +219,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	
 	if (msg.msgType & GENDATA) {
 		//get the spaceObject and set its state?
-		SpaceObject* obj = which_spaceObject(network_int); //TODO: Change to player name
+		SpaceObject* obj = which_spaceObject(msg.playerName); //TODO: Change to player name
 		if(obj != nullptr)
 		{
 			obj->setState(msg.ship);			
@@ -271,7 +268,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	}
 
 	if (msg.msgType & LASERDATA) {
-		SpaceObject* obj = which_spaceObject(network_int); //TODO: Change to player name
+		SpaceObject* obj = which_spaceObject(msg.playerName); //TODO: Change to player name
 		if(obj != nullptr)
 		{
 			// obj->setActiveWeapon(msg.wpnType); //cause of segfault.
@@ -286,7 +283,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	}
 
 	if(msg.msgType & DIEDATA) {
-		SpaceObject* obj = which_spaceObject(network_int); //TODO: Change to player name
+		SpaceObject* obj = which_spaceObject(msg.playerName); //TODO: Change to player name
 		if(obj != nullptr)
 		{
 			removeFromEveryone(obj);
@@ -294,7 +291,7 @@ void Player::handleMessage(Message msg, int network_int) {
 	}
 
 	if(msg.msgType & WINDATA) {
-		SpaceObject* obj = which_spaceObject(network_int); //TODO: Change to player name
+		SpaceObject* obj = which_spaceObject(msg.playerName); //TODO: Change to player name
 		if(obj != nullptr)
 		{
 
