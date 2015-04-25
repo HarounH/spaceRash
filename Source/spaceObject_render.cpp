@@ -13,7 +13,7 @@ void SpaceObject::render(bool dflag,ObjManager* mObjManager) {
         glMultMatrixf(mat_gl);
     if (dflag) {
 		if ( !(obj_type==SKYRISE_TALL||obj_type==SKYRISE_FAT) )
-            render_physics(true);
+            render_physics(dflag);
 	}
 	render_geometry(mObjManager);
     wasHit = false;

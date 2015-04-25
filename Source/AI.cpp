@@ -144,6 +144,9 @@ void AI_player::point_at_obj(btVector3& a2) {
 	btVector3 mpos = position(fighter);
 	btVector3 v1 = btVector3(0,0,-1); //quatRotate(fighter->getRigidBody()->getOrientation(),btVector3(0,0,-1));
 	btVector3 v2 = a2 - mpos;
+	if( v2.length2() == 0 ) { // checking for nans.
+		return;
+	}
 	v1 = v1.normalize();
 	v2 = v2.normalize();
 	btVector3 half = 0.5*(v1+v2) ;

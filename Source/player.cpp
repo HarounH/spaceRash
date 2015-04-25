@@ -115,7 +115,7 @@ void Player::render_state(double dt) {
 		
 
 		skybox->renderBox(skybox_size);
-		fighter->render(true,allObjects);
+		fighter->render(false,allObjects);
 		//render all spaceobjects.
 		for ( spaceObjWeed::const_iterator obj_iterator = EveryOne.begin()
 			; obj_iterator != EveryOne.end()
