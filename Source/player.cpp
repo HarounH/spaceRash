@@ -121,7 +121,7 @@ void Player::render_state(double dt) {
 			; obj_iterator != EveryOne.end()
 			; ++obj_iterator) {
 			//--------------------------------
-			obj_iterator->right->render(true,allObjects);
+			obj_iterator->right->render(false,allObjects);
 		}
 	glPopMatrix();
 }
