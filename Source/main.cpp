@@ -139,6 +139,8 @@ int main(int argc, char** argv) {
             }
         }
     }
+
+    usr->create_AIs();
     
     //sf::RenderWindow window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
     sf::RenderWindow window(sf::VideoMode(usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY), "spaceRash" , sf::Style::Default, sf::ContextSettings(32));
@@ -270,6 +272,7 @@ int main(int argc, char** argv) {
                 usr->setGeneralData();
                 for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
                     usr->receiveMessage();
+                usr->handOverToAIs();
             }
             ctr = (ctr+1)%TICKS ;
         }

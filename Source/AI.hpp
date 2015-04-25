@@ -22,6 +22,7 @@ private:
 	SpaceObject* fighter;
 	BulletWorld* world;
 	Message* myMessage;
+	string myName;
 
 	// distance travelled in DT by my fighter
 	double dist_travelled();
@@ -75,7 +76,7 @@ private:
 	void  point_at_obj(btVector3&);
 public:
 
-	AI_player(SpaceObject*, BulletWorld*, btVector3&);
+	AI_player(SpaceObject*, BulletWorld*, btVector3&, string);
 
 
 

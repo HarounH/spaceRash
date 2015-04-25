@@ -234,13 +234,14 @@ void AI_player::random_weapon_toggle(){
 		fighter->toggle_weapon();
 }
 
-AI_player::AI_player(SpaceObject* f, BulletWorld* w, btVector3& c): fighter(f), world(w) {
+AI_player::AI_player(SpaceObject* f, BulletWorld* w, btVector3& c, string _name): fighter(f), world(w) {
 	// need a method to initialize state, fighter,
 
-
+	myName = _name;
 	unsigned int time_ui = (unsigned int) time(NULL);
 	srand( time_ui );
 	myMessage = new Message();
+	myMessage->playerName = myName;
 }
 
 
