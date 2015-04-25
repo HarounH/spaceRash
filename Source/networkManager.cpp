@@ -12,44 +12,16 @@ long long NetworkManager::detectDeath() {
 	
 	boost::mutex::scoped_lock lock(mutex);
 	int i;
-	bool hasDropped = false;
-	for (i = 0; i < (int) timeLeft.size(); i++) {
-		if (((clock() - timeLeft[i+1])/CLOCKS_PER_SEC) >= time_out) 
+	for (auto it = timeLeft.begin(); it != timeLeft.end(); it++) {
+		if (((clock() - it->second)/CLOCKS_PER_SEC) >= time_out) 
 		{
-		 	hasDropped = true;
-			break;
+			long long dropped_id = it->first;
+			timeLeft.erase(it);
+			return dropped_id;
 	 	}
 	}
-	if(hasDropped)
-	{
-		timeLeft.erase(i+1);
-		return i+1;
-	}
 	return -1;
 }
-
-/*
-long long NetworkManager::dropped_id(){
-	
-	boost::mutex::scoped_lock lock(mutex);
-	typedef unordered_map<long long, bool>::iterator _itr;
-	_itr _end = has_dropped.end();
-	for (_itr it = has_dropped.begin(); it != _end; it++)
-	{
-		if (it->second)
-			return it->first;
-	}
-
-	return -1;
-
-}
-
-void NetworkManager::handleDrops(){
-	for (int i = 0; i < has_dropped.size(); i++)
-		if (has_dropped[i] == true)
-			//
-}
-*/
 
 NetworkManager::NetworkManager(string IP, unsigned short server_port, string local_ip, unsigned short local_port) : socket(io_service, udp::endpoint(udp::v4(), local_port)), service_thread(boost::bind(&NetworkManager::run_service, this))
 {
@@ -109,7 +81,7 @@ void NetworkManager::handle_receive(const boost::system::error_code& error, std:
 		{
 			boost::mutex::scoped_lock lock(mutex);
 			messages.push(message);
-			if(message.second != -1)
+			if(timeLeft.find(message.second) != timeLeft.end())
 				timeLeft[message.second] = (int) clock();
 			else
 				timeLeft[nextClientID + 1] = (int) clock();
