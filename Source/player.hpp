@@ -30,6 +30,7 @@ private:
 	bool didStart;
 	bool hasSetInitialPosition;
 	int numAIs;
+	string nameAI;
 	int numPlayers;
 	bool startGame;
 
@@ -48,6 +49,7 @@ private:
 	NetworkManager* network;
 	Message* myMessage;
 	std::vector< pair<string, short> > iplist;
+	std::vector<btVector3> valid_spawn;
 	/* Rendering geometry */
 	//sf::Window* wnd; //Window that things run on. <-- deprecated.
 

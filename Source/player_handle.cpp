@@ -47,7 +47,8 @@ void Player::handleMessage(Message msg, int network_int) {
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
 				cout << "1. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
-				
+				myMessage->AInumbers = numAIs;
+				myMessage->AIname = settings->name;
 				sendMessage();
 
 				/* ^ That part sends my IP address and position to everybody, but is really only meant for the new connector. */
@@ -55,6 +56,8 @@ void Player::handleMessage(Message msg, int network_int) {
 				/* Next part, i tell everyone what the new kid's location should be. */
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
+				myMessage->AInumbers = numAIs;
+				myMessage->AIname = settings->name;
 				
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
@@ -75,6 +78,8 @@ void Player::handleMessage(Message msg, int network_int) {
 						myMessage->playerName = pit->second;
 					else
 						cout << "Something's not right here\n";
+					myMessage->AInumbers = numAIs;
+					myMessage->AIname = settings->name;
 					sendMessage();
 				}
 
@@ -94,6 +99,10 @@ void Player::handleMessage(Message msg, int network_int) {
 				SpaceObject *newObject = new SpaceObject(msg.ship.objType);
 				newObject->init(bulletWorld);
 				iplist.push_back(make_pair(msg.newConnectorIP, msg.newConnectorPort));
+				if(numAIs == 0)
+					numAIs = msg.AInumbers;
+				if(nameAI == "")
+					nameAI = msg.AIname;
 				btTransform t;
 				float temp[16];
 				for(int i=0; i<16; ++i) {
@@ -118,7 +127,8 @@ void Player::handleMessage(Message msg, int network_int) {
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
-				
+				myMessage->AInumbers = numAIs;
+				myMessage->AIname = nameAI;
 				sendMessage();
 
 				cout << network->numberOfClients() << "\n";
@@ -141,6 +151,8 @@ void Player::handleMessage(Message msg, int network_int) {
 						myMessage->playerName = pit->second;
 					else
 						cout << "Something's not right here\n";
+					myMessage->AInumbers = numAIs;
+					myMessage->AIname = nameAI;
 					sendMessage();
 				}
 
@@ -168,13 +180,18 @@ void Player::handleMessage(Message msg, int network_int) {
 				cout << "3. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 				// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 				// sendMessageToClient(client_id);
+				if(numAIs == 0)
+					numAIs = msg.AInumbers;
+				if(nameAI == "")
+					nameAI = msg.AIname;
 
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
 				myMessage->playerName = settings->name;
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
-				
+				myMessage->AInumbers = numAIs;
+				myMessage->AIname = settings->name;
 				sendMessage();
 
 				*(myMessage) = msg;
@@ -195,6 +212,8 @@ void Player::handleMessage(Message msg, int network_int) {
 						myMessage->playerName = pit->second;
 					else
 						cout << "Something's not right here\n";
+					myMessage->AInumbers = numAIs;
+					myMessage->AIname = settings->name;
 					sendMessage();
 				}
 
@@ -217,6 +236,10 @@ void Player::handleMessage(Message msg, int network_int) {
 			bulletWorld->dynamicsWorld->stepSimulation(0.0f);
 			hasSetInitialPosition = true;
 			cout << "4. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
+			if(numAIs == 0)
+				numAIs = msg.AInumbers;
+			if(nameAI == "")
+				nameAI = msg.AIname;
 			// myMessage->setData((int) CONFIRMDATA, network->getMyIP(), network->getMyPort());
 			// sendMessageToClient(network_int);
 		}

@@ -24,6 +24,7 @@ Player::Player(ObjManager* mObjManager) {
 	isDead = false;
 	numPlayers = 0;
 	numAIs = 0;
+	nameAI = "";
 	hasSetInitialPosition = false;
 	allObjects = mObjManager;
 	hasWon = false;

@@ -16,6 +16,7 @@ void Player::setGameMode(std::string myip, unsigned short myport , bool startmod
 		startNetwork(myip, myport);
 		numPlayers = _numPlayers;
 		numAIs = _numAIs;
+		nameAI = settings->name;
 		didStart = true;
 	}
 	else
@@ -23,7 +24,6 @@ void Player::setGameMode(std::string myip, unsigned short myport , bool startmod
 		connectToNetwork(otherip, otherport, myip, myport);
 		didStart = false;
 	}
-	create_AIs(); // creates AIs
 }
 
 void Player::create_AIs() {

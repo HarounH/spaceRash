@@ -102,7 +102,7 @@ void State::getData(int& h, int& am, btTransform& t, btVector3& velo, btVector3&
 Message::Message(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo , int& _wpnType , 
-	std::string ip /*= ""*/ , unsigned short port /*= 0*/, std::string hitname /*= ""*/ , std::string name /*= ""*/) : 
+	std::string ip /*= ""*/ , unsigned short port /*= 0*/, std::string hitname /*= ""*/ , std::string name /*= ""*/, int na, string ain) : 
     ship(h, am, t, velo, avelo , _t) {
 	
 	msgType = prot;
@@ -120,10 +120,16 @@ Message::Message(int prot ,
 	laserTo.push_back(_laserTo.getY());
 	laserTo.push_back(_laserTo.getZ());
 	
+	AInumbers = na;
+	AIname = ain;
 }
 
 Message::Message() {
 	msgType = 0;
+	AInumbers = 0;
+	AIname = "";
+	playerName = "";
+	hitPlayerName = "";
 }
 
 Message::Message(Message& other) : ship(other.ship) {
@@ -135,6 +141,8 @@ Message::Message(Message& other) : ship(other.ship) {
 	wpnType = other.wpnType;
 	newConnectorIP = other.newConnectorIP;
 	newConnectorPort = other.newConnectorPort;
+	AInumbers = other.AInumbers;
+	AIname = other.AIname;
 }
 
 Message& Message::operator= (Message& other) {
@@ -147,14 +155,15 @@ Message& Message::operator= (Message& other) {
 	wpnType = other.wpnType;
 	newConnectorIP = other.newConnectorIP;
 	newConnectorPort = other.newConnectorPort;
-
+	AInumbers = other.AInumbers;
+	AIname = other.AIname;
 	return *this;
 }
 
 void Message::setData(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-	std::string ip /*= ""*/ , unsigned short port /*= 0,*/ , std::string hitname /*= ""*/ , std::string name /*= ""*/) {
+	std::string ip /*= ""*/ , unsigned short port /*= 0,*/ , std::string hitname /*= ""*/ , std::string name /*= ""*/, int na, string ain) {
 	
 	ship.setData(h, am, t, velo, avelo , _t);
 	
@@ -175,6 +184,9 @@ void Message::setData(int prot ,
 	laserTo.push_back(_laserTo.getX());
 	laserTo.push_back(_laserTo.getY());
 	laserTo.push_back(_laserTo.getZ());
+
+	AInumbers = na;
+	AIname = ain;
 }
 
 void Message::setData(int prot, std::string ip/* = ""*/, unsigned short port /*= 0*/) {
@@ -223,7 +235,7 @@ void Message::getData(btVector3& _laserFrom, btVector3& _laserTo) {
 void Message::getData(int prot , 
 	int& h, int& am, btTransform& t, btVector3& velo, btVector3& avelo , OBJECT_TYPE& _t, //For state
 	btVector3& _laserFrom , btVector3& _laserTo ,int& _wpnType,
-	std::string& ip, unsigned short port, std::string& hitname, std::string& name) {
+	std::string& ip, unsigned short port, std::string& hitname, std::string& name, int na, string ain) {
 	
 	prot = msgType;
 	_wpnType = wpnType;
@@ -242,6 +254,9 @@ void Message::getData(int prot ,
 	_laserTo.setY(laserTo[1]);
 	_laserFrom.setZ(laserFrom[2]);
 	_laserTo.setZ(laserTo[2]);
+
+	na = AInumbers;
+	ain = AIname;
 
 }
 

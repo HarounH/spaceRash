@@ -26,6 +26,7 @@ void Player::readWorld(std::string worldfilepath /*=WORLD_PHY_FNAME*/) {
 	//Now, to do getlines until over.
 	string line="";
 	int nline=0;
+	bool flag = true;
 	while(getline(f,line)) {
 		//read line into vector.
 		std::vector<float> parts;
