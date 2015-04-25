@@ -23,6 +23,27 @@ void Player::setGameMode(std::string myip, unsigned short myport , bool startmod
 		connectToNetwork(otherip, otherport, myip, myport);
 		didStart = false;
 	}
+	create_AIs(); // creates AIs
+}
+
+void Player::create_AIs() {
+	cout << numAIs << "\n";
+	AI_players.resize(numAIs);
+	if (bulletWorld == NULL)
+		cout << "EDADAS"<<'\n';
+	// create valid_spawns
+	for (int i = 0; i < numAIs; i++){
+		SpaceObject* AI_object = new SpaceObject(XWING);
+		cout << "HERE" << "\n";
+		add_object(AI_object);
+		cout << "HERE" << "\n";
+		AI_object->init(bulletWorld);
+		cout << "HERE" << "\n";
+		btVector3 dummy(0,0,0);
+		cout << "HERE " << '\n';
+		AI_players[i] = new AI_player(AI_object, bulletWorld,dummy );
+	}
+		
 }
 
 void Player::startNetwork(string local_ip, unsigned short local_port) {
@@ -115,4 +136,12 @@ void Player::receiveMessage() {
 	else if(inMessage.first != "")
 		translateMessage(inMessage);
 }
+
+void Player::handOverToAIs() {
+	for(int i = 0 ; i < AI_players.size(); i++)
+	{
+		AI_players[i]->take_action(EveryOne, network, fighter);
+	}
+}
+
 #endif

@@ -8,6 +8,7 @@
 #include "selectShipScreen.hpp"
 #include "startJoinScreen.hpp"
 #include "ObjManager.hpp"
+#include "AI.hpp"
 typedef boost::bimap< int, SpaceObject* > spaceObjWeed;
 typedef spaceObjWeed::value_type spaceObjWeedNormal;
 typedef spaceObjWeed::left_value_type spaceObjWeedLeft; 
@@ -49,6 +50,10 @@ private:
 	std::vector< pair<string, short> > iplist;
 	/* Rendering geometry */
 	//sf::Window* wnd; //Window that things run on. <-- deprecated.
+
+	/* VECTOR OF AIs */
+	vector<AI_player* > AI_players;
+
 	/* Physics geometry. */
 	BulletWorld* bulletWorld;
 	sf::Music* music;
@@ -66,6 +71,10 @@ private:
 public:
 	Player(ObjManager*);
 	~Player();
+
+		/* AI stuff*/
+	void create_AIs();
+	void handOverToAIs();
 
 	bool hasWon;
 	bool endGame;
