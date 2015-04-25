@@ -12,6 +12,7 @@ Weapon::Weapon(WEAPON_TYPE t , btVector3 color) {
 		case MEDIUM_LASER : {
 			ammo = max_ammo = 5000; 
 			strength = 50;
+			regen_rate = 0.0005;
 			break;
 		}
 		case STRONG_LASER : {
@@ -37,25 +38,26 @@ void Weapon::fireProjectile(btVector3& from, btVector3& to) {
 	time_left = 10;
 	switch (type) {
 		case WEAK_LASER   : {
-			if (ammo > 100) {
+			
 				drawProjectile(from,to);
-				ammo -= 100; 
+				ammo -= 500; 
+				if(ammo<0) ammo=0;
 				break;
-			}
 		}
 		case MEDIUM_LASER : {
-			if (ammo > 100) {
 				drawProjectile(from,to);
-				ammo -= 100; 
+				ammo -= 500; 
+				if(ammo<0) ammo=0;
 				break;
-			}
+			
 		}
 		case STRONG_LASER : {
-			if (ammo > 100) {
+				if(ammo<600)
+					break;
 				drawProjectile(from,to);
-				ammo -= 100; 
+				ammo -= 500; 
+				if(ammo<0) ammo=0;
 				break;
-			}
 		}
 		default : {
 			break;
@@ -131,10 +133,8 @@ void Weapon::drawProjectile(btVector3& from, btVector3& to) {
 }
 
 void Weapon::update() {
-	if (active) {
-		ammo += (regen_rate*max_ammo);
-		if (ammo>max_ammo) { ammo = max_ammo ; }
-	}
+	ammo  = ammo + (regen_rate*max_ammo);
+	if (ammo>max_ammo) { ammo = max_ammo ; }
 	drawProjectile(last_from , last_to);
 }
 #endif

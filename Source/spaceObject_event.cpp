@@ -26,6 +26,8 @@ void SpaceObject::handleCollision(SpaceObject* other) {
 	wasHit = true;
 	//---------TODO Need to scale damage down---------//
 	health -=50;
+	if(health<0)
+		health = 0;
 	// btScalar otherMass = other->getRigidBody()->getInvMass();
 	// if(otherMass==0){
 	// 	health/=3;
@@ -157,6 +159,8 @@ void SpaceObject::roll_right() {
 
 
 void SpaceObject::fire_laser() {
+	if(weapons[activeWeapon]->ammo<600)
+		return;
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
 	btVector3 from = trans.getOrigin() + quatRotate(trans.getRotation() , btVector3(0,0,-5));

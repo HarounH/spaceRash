@@ -75,7 +75,6 @@ void Player::playMusic(bool dflag){
     
 }
 void Player::update_state(double dt) {
-	
 }
 
 void Player::render_state(double dt) {

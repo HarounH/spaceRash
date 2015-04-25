@@ -37,6 +37,7 @@ public:
 	void 	setType(OBJECT_TYPE _type);
 
 	int 	getHealth();
+	
 	void 	setHealth(int h);
 	void 	getTrans(float* mat);
 	Weapon* 	getActiveWeapon();
@@ -75,7 +76,7 @@ public:
 	void roll_left();
 	void roll_right();
 	void toggle_weapon();
-
+	std::vector<Weapon*> & getWeapons();
 	void rotate(double pitch, double yaw);
 	void setPosition(btVector3 vec);
 	void setStatic(); //sets a bodies' mass to 0 IF it is of a certain type.

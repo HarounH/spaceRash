@@ -37,7 +37,9 @@ void SpaceObject::getTrans(float* mat) {
 	body->getMotionState()->getWorldTransform(trans_com);
 	trans_com.getOpenGLMatrix(mat);
 }
-
+std::vector<Weapon*> & SpaceObject::getWeapons(){
+	return weapons;
+}
 void SpaceObject::setPosition(btVector3 vec) {
 	bool actstate = body->isActive();
 	body->activate(true);
