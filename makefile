@@ -8,6 +8,7 @@ EXEC=spaceRash.out
 Files=*.o
 DOCUMENT=DocSRC/
 PDF=PDF\ FILES/
+LATEX=latex_src/
 #FOR LINUX
 ifeq ($(UNAME), Linux)
 LIBS= -lpthread -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lboost_system -lboost_thread -lboost_serialization -lsfgui -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lGL -lGLU
@@ -223,8 +224,10 @@ clean:
 	rm $(EXEC) $(OBJ)*
 cleanFiles:
 	rm $(Files) 
-DOC: $(DOCUMENT)Changes.tex
+DOC: $(DOCUMENT)Changes.tex $(DOCUMENT)$(LATEX)DesignDoc.tex
 	pdflatex $<
+	cd $(DOCUMENT)$(LATEX) && pdflatex DesignDoc.tex; rm DesignDoc.aux DesignDoc.log
+	mv $(DOCUMENT)$(LATEX)DesignDoc.pdf $(PDF)DesignDoc.pdf
 	rm Changes.aux Changes.log
-	mv Changes.pdf $(PDF)
+	mv Changes.pdf $(PDF)Changes.pdf
 endif
