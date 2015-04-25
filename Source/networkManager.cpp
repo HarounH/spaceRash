@@ -7,21 +7,28 @@ NetworkManager::~NetworkManager(){
 	service_thread.join();
 }
 
-/*
-void NetworkManager::detectDeath(){
+
+long long NetworkManager::detectDeath() {
 	
 	boost::mutex::scoped_lock lock(mutex);
-	for (int i = 0; i < timeLeft.size(); i++){
-		if (clock() - timeLeft[i] >= time_out) 
-		 	{
-		 		has_dropped[i] = true;
-
-		 	}
+	int i;
+	bool hasDropped = false;
+	for (i = 0; i < (int) timeLeft.size(); i++) {
+		if (((clock() - timeLeft[i+1])/CLOCKS_PER_SEC) >= time_out) 
+		{
+		 	hasDropped = true;
+			break;
+	 	}
 	}
-
+	if(hasDropped)
+	{
+		timeLeft.erase(i+1);
+		return i+1;
+	}
+	return -1;
 }
 
-
+/*
 long long NetworkManager::dropped_id(){
 	
 	boost::mutex::scoped_lock lock(mutex);

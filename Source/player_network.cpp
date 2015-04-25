@@ -38,7 +38,6 @@ void Player::connectToNetwork(string IP, unsigned short server_port, string loca
 	myMessage->ship.objType = fighter->getType();
 	myMessage->playerName = settings->name;
 	sendMessage();
-
 }
 
 void Player::setGeneralData() {

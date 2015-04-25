@@ -12,7 +12,6 @@
 #include <unordered_map>
 
 #define NETWORK_BUFFER_SIZE 4096
-#define time_out
 
 typedef boost::bimap<long long, boost::asio::ip::udp::endpoint> ClientList;
 typedef ClientList::value_type Client;
@@ -45,6 +44,8 @@ class NetworkManager{
 		message_queue< pair<std::string, long long> > messages;
 		long long nextClientID;
 		ClientList clients;
+
+		double time_out = 5;
 
 		// DATA
 		unsigned long long receivedMessages;
@@ -88,7 +89,7 @@ class NetworkManager{
 		long long get_client_id(string, unsigned short);
 
 		bool findClient(string ip, unsigned short port);
-		void detectDeath();
+		long long detectDeath();
 		
 		void SendToAllExcept(const std::string& message, long long clientID);
 

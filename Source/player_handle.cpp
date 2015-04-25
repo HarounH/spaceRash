@@ -35,6 +35,7 @@ void Player::handleMessage(Message msg, int network_int) {
 
 				/* Send over your data. */
 				myMessage->setData((int) SETCONNECTDATA, network->getMyIP(), network->getMyPort());
+				myMessage->playerName = settings->name;
 				btTransform mytrans = fighter->getRigidBody()->getWorldTransform();
 				float temp[16];
 				mytrans.getOpenGLMatrix(temp);
@@ -48,7 +49,6 @@ void Player::handleMessage(Message msg, int network_int) {
 				/* Next part, i tell everyone what the new kid's location should be. */
 				*(myMessage) = msg;
 				myMessage->msgType = (int) SETCONNECTDATA;
-				myMessage->playerName = settings->name;
 				btVector3 np(0, 0, 0);
 				getNextValidPosition(np);
 				btTransform yourTrans;
@@ -56,6 +56,7 @@ void Player::handleMessage(Message msg, int network_int) {
 				yourTrans.setOrigin(np);
 				yourTrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
+
 				sendMessage();
 
 				for(auto it = iplist.begin(); it != iplist.end(); it++)
@@ -67,6 +68,11 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
+					auto pit = NameToP.right.find(alreadyExistingID);
+					if(pit != NameToP.right.end())
+						myMessage->playerName = pit->second;
+					else
+						cout << "Something's not right here\n";
 					sendMessage();
 				}
 
@@ -128,6 +134,11 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
+					auto pit = NameToP.right.find(alreadyExistingID);
+					if(pit != NameToP.right.end())
+						myMessage->playerName = pit->second;
+					else
+						cout << "Something's not right here\n";
 					sendMessage();
 				}
 
@@ -177,6 +188,11 @@ void Player::handleMessage(Message msg, int network_int) {
 					correspondingTrans.getOpenGLMatrix(temp2);
 					(myMessage->ship).transform.assign(temp2 , temp2 + 15);
 					myMessage->setData((int) SETCONNECTDATA, it->first, it->second);
+					auto pit = NameToP.right.find(alreadyExistingID);
+					if(pit != NameToP.right.end())
+						myMessage->playerName = pit->second;
+					else
+						cout << "Something's not right here\n";
 					sendMessage();
 				}
 
@@ -243,34 +259,32 @@ void Player::handleMessage(Message msg, int network_int) {
 				mytrans.getOpenGLMatrix(temp);
 				(myMessage->ship).transform.assign(temp , temp + 15);
 
-				usleep(20000);
 				sendMessage();
 				cout << network->numberOfClients() << "\n";
 				cout << "2. " << msg.newConnectorIP << " " << msg.newConnectorPort << "\n";
 
 				*(myMessage) = msg;
-				usleep(20000);
 				sendMessage();
 			}
 		}
 
 	}
 
-	// if (msg.msgType & LASERDATA) {
-	// 	SpaceObject* obj = which_spaceObject(network_int);
-	// 	if(obj != nullptr)
-	// 	{
-	// 		obj->setActiveWeapon(msg.wpnType); //cause of segfault.
-	// 		btVector3 laserFrom, laserTo;
-	// 		msg.getData(laserFrom, laserTo);
-	// 		obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
-	// 		if(msg.hitPlayerName == settings->name)
-	// 		{
-	// 			fighter->hit_by_laser();
-	// 		}
-	// 	}
+	if (msg.msgType & LASERDATA) {
+		SpaceObject* obj = which_spaceObject(network_int);
+		if(obj != nullptr)
+		{
+			// obj->setActiveWeapon(msg.wpnType); //cause of segfault.
+			btVector3 laserFrom, laserTo;
+			msg.getData(laserFrom, laserTo);
+			obj->getActiveWeapon()->fireProjectile(laserFrom, laserTo);
+			if(msg.hitPlayerName == settings->name)
+			{
+				fighter->hit_by_laser();
+			}
+		}
 		
-	// }
+	}
 }
 
 #endif
