@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    if(usr->beginGame())
+    if(usr->started())
         usr->create_AIs(true);
     else
         usr->create_AIs(false);
@@ -188,17 +188,15 @@ int main(int argc, char** argv) {
     deadmsgflag = false;
     winmsgflag = false;
     activenet = true;//INV: Send and recv messages while activenet.
-
+    cout << "I'm about to start the main loop\n";
     while (running)
-    {
-        
+    {       
         //detect drops.
         deadclientid = usr->getNetwork()->detectDeath();
         if ( deadclientid == -1 ) {
             //no body dropped.
         } else {
             usr->removeFromEveryone(deadclientid);
-
         }
 
 
@@ -275,7 +273,8 @@ int main(int argc, char** argv) {
                 usr->setGeneralData();
                 for(int i = 0; i < usr->getNetwork()->numberOfClients(); i++)
                     usr->receiveMessage();
-                usr->handOverToAIs();
+                if(usr->started())
+                    usr->handOverToAIs();
             }
             ctr = (ctr+1)%TICKS ;
         }

@@ -80,7 +80,6 @@ void AI_player::iterate_thru(boost::bimap< int, SpaceObject* >& others, pair<Spa
 	double closest_building_dist = 1000000.0;
 	double closest_opponent_dist = 1000000.0;
 	double _dist;
-	int i = 0;
 	for(auto i = others.left.begin(); i != others.left.end(); ++i) {
 		if(i->second == fighter) {
 			continue;
@@ -90,26 +89,27 @@ void AI_player::iterate_thru(boost::bimap< int, SpaceObject* >& others, pair<Spa
 
 			if (is_fighter_type( (i->second) ))
 			{
-				i++;
+				cout << "beginhi\n";
 				consider_these.first = (i->second);
 				closest_opponent_dist = dist(i->second, fighter);
 				cout << "hi\n";
 			}
 		}
 
-		if(gonnaCollideWith(i->second))
+		else if(gonnaCollideWith(i->second))
 		{
+			cout << "in gonnaCollideWith\n";
 		 	if (skyscraper( (i->second) ) )
 			{
 				consider_these.second = (i->second);
 			}
+			cout << "outta collide with\n";
 		}
 	}
 
 
 	if (hostFighter != nullptr && is_fighter_type( hostFighter ) )
 	{
-		i++;
 		if(dist(hostFighter, fighter) <= closest_opponent_dist)
 		{
 			consider_these.first = (hostFighter);
@@ -118,7 +118,6 @@ void AI_player::iterate_thru(boost::bimap< int, SpaceObject* >& others, pair<Spa
 		}
 	}
 
-	cout << "NUMBER OF FIGHTR SHIPS: "  << i << '\n';
 }
 
 // mutates state to turn away from this spaceObject by turning towards "delta_vector"

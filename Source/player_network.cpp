@@ -57,8 +57,12 @@ void Player::create_AIs(bool flag) {
 			addtoNametoP(thisAIName, nextPlayerId);
 		}
 
-		if(flag)
+		if(flag) {
+			cout << "hi, I'm making an ai player, id=" << i << "@ pos(" << valid_spawn[i].getX() << "\n";
 			AI_players[i] = new AI_player(AI_object, bulletWorld, valid_spawn[i], thisAIName);
+			cout << "Spawned\n";
+		}
+	
 	}
 		
 }
@@ -157,7 +161,9 @@ void Player::receiveMessage() {
 void Player::handOverToAIs() {
 	for(int i = 0 ; i < AI_players.size(); i++)
 	{
+		cout << " Handing over : " << i << "\n";
 		AI_players[i]->take_action(EveryOne, network, fighter);
+		cout << "Done taking action.\n";
 	}
 }
 
