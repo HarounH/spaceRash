@@ -11,7 +11,7 @@ ifeq ($(UNAME), Linux)
 LIBS= -lpthread -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lboost_system -lboost_thread -lboost_serialization -lsfgui -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lGL -lGLU
 INCS=-I/usr/include/bullet
 HELP= $(SRC)helpers.hpp
-$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)HUD.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)ObjManager.o $(OBJ)Obj_Loader.o  $(OBJ)startJoinScreen.o $(OBJ)selectShipScreen.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o
+$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)HUD.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)ObjManager.o $(OBJ)Obj_Loader.o  $(OBJ)startJoinScreen.o $(OBJ)selectShipScreen.o $(OBJ)AI.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o
 	$(Compiler) $^ $(LIBS) -o $@ 
 
 all:
@@ -93,6 +93,10 @@ $(OBJ)ObjManager.o: $(SRC)ObjManager.cpp
 	$(Compiler) -c $^ $(INCS)
 	mv ObjManager.o $@
 
+$(OBJ)AI.o: $(SRC)AI.cpp
+	$(Compiler) -c $^ $(INCS)
+	mv AI.o $@
+
 $(OBJ)Obj_Loader.o: $(SRC)obj_Loader.cpp
 	$(Compiler) -c $^ $(INCS)
 	mv obj_Loader.o $@
@@ -105,7 +109,7 @@ execute: $(EXEC)
 	./$<
 
 clean:
-	rm $(EXEC) $(OBJ)*
+	rm $(EXEC) *.tang $(OBJ)*
 cleanFiles:
 	rm $(Files) 
 endif
@@ -116,7 +120,7 @@ LIBS=-lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath -lboost_sy
 INCS=-I /usr/local/Cellar/bullet/2.82/include/bullet/
 FRAMEWORKS=-framework OpenGL -framework GLUT
 
-$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)selectShipScreen.o $(OBJ)startJoinScreen.o $(OBJ)HUD.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o $(OBJ)ObjManager.o $(OBJ)Obj_Loader.o
+$(EXEC):  $(OBJ)message.o $(OBJ)userSettings.o  $(OBJ)skybox.o  $(OBJ)networkManager.o $(OBJ)weapon.o  $(OBJ)spaceObject_load.o $(OBJ)spaceObject_render.o $(OBJ)spaceObject_event.o $(OBJ)spaceObject_getsets.o $(OBJ)selectShipScreen.o $(OBJ)startJoinScreen.o $(OBJ)HUD.o $(OBJ)AI.o $(OBJ)player.o $(OBJ)player_world.o $(OBJ)player_event.o $(OBJ)player_getsets.o $(OBJ)player_network.o $(OBJ)player_handle.o $(OBJ)main.o $(OBJ)ObjManager.o $(OBJ)Obj_Loader.o
 	$(Compiler) $^ $(LIBS) $(FRAMEWORKS) -o $@ 
 
 all:
@@ -197,6 +201,11 @@ $(OBJ)message.o: $(SRC)message.cpp
 $(OBJ)ObjManager.o: $(SRC)ObjManager.cpp
 	$(Compiler) -c $^ $(INCS)
 	mv ObjManager.o $@
+
+$(OBJ)AI.o: $(SRC)AI.cpp
+	$(Compiler) -c $^ $(INCS)
+	mv AI.o $@
+
 $(OBJ)Obj_Loader.o: $(SRC)obj_Loader.cpp
 	$(Compiler) -c $^ $(INCS)
 	mv obj_Loader.o $@
@@ -209,7 +218,7 @@ execute: $(EXEC)
 	./$<
 
 clean:
-	rm $(EXEC) $(OBJ)*
+	rm $(EXEC) *.tang $(OBJ)*
 cleanFiles:
 	rm $(Files) 
 endif
