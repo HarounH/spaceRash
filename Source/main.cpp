@@ -140,7 +140,10 @@ int main(int argc, char** argv) {
         }
     }
 
-    usr->create_AIs();
+    if(usr->beginGame())
+        usr->create_AIs(true);
+    else
+        usr->create_AIs(false);
     
     //sf::RenderWindow window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
     sf::RenderWindow window(sf::VideoMode(usr->getSettings()->defaultScreenSizeX , usr->getSettings()->defaultScreenSizeY), "spaceRash" , sf::Style::Default, sf::ContextSettings(32));

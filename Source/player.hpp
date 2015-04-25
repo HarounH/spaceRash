@@ -76,7 +76,7 @@ public:
 	~Player();
 
 		/* AI stuff*/
-	void create_AIs();
+	void create_AIs(bool);
 	void handOverToAIs();
 
 	bool hasWon;

@@ -26,8 +26,9 @@ void Player::setGameMode(std::string myip, unsigned short myport , bool startmod
 	}
 }
 
-void Player::create_AIs() {
+void Player::create_AIs(bool flag) {
 	cout << numAIs << "\n";
+	if(flag)
 	AI_players.resize(numAIs);
 	if (bulletWorld == NULL)
 		cout << "EDADAS"<<'\n';
@@ -39,6 +40,7 @@ void Player::create_AIs() {
 		btTransform yourTrans;
 		yourTrans.setIdentity();
 		yourTrans.setOrigin(valid_spawn[i]);
+		cout << "Spawn " << i << ": " << valid_spawn[i].getX() << " " << valid_spawn[i].getY() << " " << valid_spawn[i].getZ() << "\n";
 		AI_object->init(bulletWorld);
 		AI_object->getRigidBody()->setWorldTransform(yourTrans);
 
@@ -55,7 +57,8 @@ void Player::create_AIs() {
 			addtoNametoP(thisAIName, nextPlayerId);
 		}
 
-		AI_players[i] = new AI_player(AI_object, bulletWorld, valid_spawn[i], thisAIName);
+		if(flag)
+			AI_players[i] = new AI_player(AI_object, bulletWorld, valid_spawn[i], thisAIName);
 	}
 		
 }
