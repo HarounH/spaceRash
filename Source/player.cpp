@@ -3,6 +3,8 @@
 #include "player.hpp"
 
 /*--------TODO: DECIDE ON THE SKY BOX DIMENSIONS---------------*/
+SpaceObject* Player::healthPackToRemove = NULL;
+
 Player::Player(ObjManager* mObjManager) {
 	//network = new NetworkManager();
 
@@ -85,6 +87,13 @@ void Player::playMusic(bool dflag){
 void Player::update_state(double dt) {
 	if(fighter->getHealth()<=0){
 		isDead = true;
+	}
+	if ( healthPackToRemove==NULL ) {
+		//pass
+	} else {
+		bulletWorld->dynamicsWorld->removeRigidBody(healthPackToRemove->getRigidBody());
+		removeFromEveryone(healthPackToRemove);
+		healthPackToRemove=NULL;
 	}
 }
 
@@ -259,7 +268,14 @@ bool Player::collisionCallback(btManifoldPoint& cp,
 	SpaceObject* o1 = ((SpaceObject*)(obj1->getUserPointer()));
 	SpaceObject* o2 = ((SpaceObject*)(obj2->getUserPointer()));
 	#undef obj1
+
 	#undef obj2
+
+	if(o1->getType()==DEBRIS) {
+		healthPackToRemove = o1;
+	} else if(o2->getType()==DEBRIS) {
+		healthPackToRemove = o2;
+	}
 	return false;
 }
 

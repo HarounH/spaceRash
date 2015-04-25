@@ -67,6 +67,8 @@ void HUD::resize(sf::RenderWindow& wnd, sf::Event& event) {
 void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	wnd.pushGLStates();
 	wnd.draw(crosshair);
+	float deathTextSize = deathText.getGlobalBounds().width;
+	deathTextSize = (wnd.getSize().x - deathTextSize)/2.0;
 	
 	float offset_health =((0.2)+float((1000.0-refer->getHealth()))/1000.0*0.3)*healthBarSize;
 	
@@ -74,7 +76,8 @@ void HUD::draw(SpaceObject* refer , sf::RenderWindow& wnd) {
 	health.setPosition(sf::Vector2f(offset_health,health.getPosition().y));
 	health.setSize(sf::Vector2f((float)refer->getHealth()/1000.0*ammoBarSize,2.0f));
 	
-	deathText.setPosition(sf::Vector2f(0.1*wnd.getSize().x , 0.1*wnd.getSize().y));
+	//deathText.setPosition(sf::Vector2f(deathTextSize,0.1*wnd.getSize().y));
+	deathText.setPosition(sf::Vector2f(0.1*wnd.getSize().x,0.1*wnd.getSize().y));
 	ammobar.setPosition(sf::Vector2f(offset_ammo,ammobar.getPosition().y));
 	
 	ammobar.setSize(sf::Vector2f(float(refer->getActiveWeapon()->ammo)/5000.0*ammoBarSize,2.0f));

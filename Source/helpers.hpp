@@ -67,7 +67,7 @@ class NetworkManager;
 struct Weapon;
 struct State;
 struct Message;
-
+class AI_player;
 /** Bullet Physics' World. */
 struct BulletWorld {
     btBroadphaseInterface* broadphase;// = new btDbvtBroadphase();

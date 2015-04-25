@@ -4,6 +4,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "helpers.hpp"
 #include "ObjManager.hpp"
+#include "player.hpp"
 /**
 	What follows are the file paths and so on.
 */

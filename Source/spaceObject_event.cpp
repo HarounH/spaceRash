@@ -25,6 +25,11 @@ void SpaceObject::makeMessage(State*& state,  Message*& msg) {
 void SpaceObject::handleCollision(SpaceObject* other) {
 	
 	//---------TODO Need to scale damage down---------//
+	if(other->getType()==DEBRIS) {
+		//health pack.
+		health+=250;
+	}
+
 	health -=50;
 	if(health<0)
 		health = 0;

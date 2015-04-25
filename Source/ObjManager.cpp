@@ -196,9 +196,74 @@ void ObjManager::render(OBJECT_TYPE id){
             //draw a cyclinder.
             drawEndpoint(btVector3(50,1000,50));
         }
+        case DEBRIS : {
+            drawDebris(btVector3(5.0,5.0,5.0));
+        }
 		default: break;
 	}
 
 }
+void ObjManager::drawDebris(btVector3 dim){
+btScalar x,y,z;
+    x = dim.getX();
+    y = dim.getY();
+    z = dim.getZ();
+    int c = 0;
 
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    float currentColor[4];
+    glGetFloatv(GL_CURRENT_COLOR,currentColor);
+    glColor3f(0.0,1.0,0.0);
+    glBegin(GL_POLYGON);
+    glVertex3f(-x, -y, -z);
+    glVertex3f(-x, y, -z);
+    glVertex3f(x, y, -z);
+    glVertex3f(x, -y, -z);
+    glEnd();
+    
+    //Front face
+    glBegin(GL_POLYGON);
+    glVertex3f(-x, -y, z);
+    glVertex3f(x, -y, z);
+    glVertex3f(x, y, z);
+    glVertex3f(-x, y, z);
+    glEnd();
+    
+    //Left face
+    glBegin(GL_POLYGON);
+    glVertex3f(-x, -y, -z);
+    glVertex3f(-x, -y, z);
+    glVertex3f(-x, y, z);
+    glVertex3f(-x, y, -z);
+    glEnd();
+    
+    //Right face
+    glBegin(GL_POLYGON);
+    glVertex3f(x, -y, -z);
+    glVertex3f(x, y, -z);
+    glVertex3f(x, y, z);
+    glVertex3f(x, -y, z);
+    glEnd();
+    
+    //Top face
+    glBegin(GL_POLYGON);
+    glVertex3f(-x, y, -z);
+    glVertex3f(-x, y, z);
+    glVertex3f(x, y, z);
+    glVertex3f(x, y, -z);
+    glEnd();
+    
+    //Bottom face
+    glBegin(GL_POLYGON);
+    glVertex3f(-x, -y, -z);
+    glVertex3f(x, -y, -z);
+    glVertex3f(x, -y, z);
+    glVertex3f(-x, -y, z);
+    glEnd();
+
+    glColor3f( currentColor[0] , currentColor[1] , currentColor[2] );
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+}
 #endif

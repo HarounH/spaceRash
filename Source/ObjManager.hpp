@@ -12,6 +12,7 @@ public:
 	void render(OBJECT_TYPE id);
 	void drawBox(btVector3 dim , sf::Texture* tex, int c);
 	void drawEndpoint(btVector3 dim);
+	void drawDebris(btVector3);
 	~ObjManager(){
 		for(int i=0;i<mBuildingTextures.size();++i){
 			if(!(!(mBuildingTextures[i]))) { delete mBuildingTextures[i]; }

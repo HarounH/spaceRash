@@ -68,6 +68,7 @@ private:
 	float maxHeightWithoutDamage;
 	UserSettings* settings;
 	int camera_idx;
+	static SpaceObject* healthPackToRemove;
 public:
 	Player(ObjManager*);
 	~Player();
